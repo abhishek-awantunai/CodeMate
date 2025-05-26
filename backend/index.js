@@ -1,12 +1,42 @@
-// const URI = "mongodb+srv://byheart2526:<db_password>@namastenode.aeuuy20.mongodb.net/"
+// Load environment variables
 require("dotenv").config();
 
-const express = require("express");
+const express = require('express');
+const connectToDatabase = require("./src/config/database");
+const authRouter = require('./src/routers/auth');
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
 
-app.listen(PORT, () => {
-    console.log("Server is running on port 3000");
+app.use('/auth', authRouter);
+
+const initializeConnection = async () => {
+    try {
+        await connectToDatabase();
+        console.log('Database connected successfully');
+        app.listen(PORT, () => console.log(`Backend Server is Running on PORT: ${PORT}`));
+    } catch (error) {
+        console.error('Database connection failed:', error);
+        process.exit(1); // Exit the process with failure
+    }
+}
+
+/*
+    The public directory is looked from where the server is running.
+    This means if the server is running from the backend directory, it will look for the public directory in the backend directory.
+    If the server is running from the root directory, it will look for the public directory in the root directory.
+    If you want to serve static files from a different directory, you can specify the path accordingly.
+    For example, if you want to serve static files from the public directory in the root directory, you can use:
+    app.use('/', express.static('../public')); 
+*/
+// app.use('/', express.static('public'));
+// app.use('/public', express.static('public'));
+
+app.use((err, req, res, next) => {
+    res.status(500).json({ error: err.message || 'Internal Server Error' });
 });
+
+initializeConnection();
