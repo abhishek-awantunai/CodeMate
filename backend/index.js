@@ -3,10 +3,10 @@ require("dotenv").config();
 
 const express = require('express');
 const connectToDatabase = require("./src/config/database");
-const authRouter = require('./src/routers/auth');
-// const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
+
+const authRouter = require('./src/routers/auth');
+const profileRouter = require('./src/routers/profile');
 
 const app = express();
 
@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/auth', authRouter);
+app.use('/profile', profileRouter);
 
 const initializeConnection = async () => {
     try {

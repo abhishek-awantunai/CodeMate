@@ -29,6 +29,19 @@ const validateSignUpData = (obj) => {
     return userData;
 }
 
+const validateEditProfileData = (obj) => {
+    const allowedFields = ['firstName', 'lastName', 'age', 'gender', 'bio', 'phoneNumber', 'address', 'profilePicture'];
+
+    const isEditAllowed =Object.keys(obj).every(field => allowedFields.includes(field));
+
+    if (!isEditAllowed) {
+        throw new Error(`Invalid fields in the request. Only ${allowedFields.join(', ')} can be edited.`);
+    }
+
+    return true;
+}
+
 module.exports = {
     validateSignUpData,
+    validateEditProfileData,
 };
