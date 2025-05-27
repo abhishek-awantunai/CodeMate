@@ -1,0 +1,240 @@
+Node
+
+- Node Repl (read, evaluate, print, loop)
+- Node JS is a javascript runtime environment built on chrome V8 engine
+- Global Object Inside Node JS
+    - Global is the global object in node
+    - Global is one of the apis given to us by node js like setTimeout, setInterval
+    - This = window in browser
+    - This = {} in case of node
+    - Window = this = self = frames = same global window object
+    - globalThis - 2020 it came
+    - Global === globalThis in node
+    - globalThis === window === this == self === frames in browser
+- We can not access the variable , methods and functions from one module to another module by simply requiring
+- Modules are protected by defaults, modules  protects their variables and functions from leaking
+- Module.exports = {}. Whatever is exported over here is imported by the require statement
+- You can not access the variables and functions of a module outside the module unless the module want it to be
+- Common js module 
+    - Module.exports = {} and use it by requiring
+- In package.json write type: “module” to switch to ejs module as by default it is common js module
+- In Ejs module pattern we use import { xyz } from ‘./xyz.js’
+- Common Js module patter is const xyz = require(‘./xyz.js’)
+- .js is important in case of import { calculateSum } from ‘xyz.js’
+- Common js modules are required in a synchronous way
+- In EJS modules you can import module in asynchronous way as well by default its synchronous
+- Ejs / ES6 modules / pjs
+- In es6 code is run into strict mode
+- In common js it is used in non strict mode
+- By default module.exports is a empty object
+- So somewhere you can find like
+- Module.exports.calculateSum  = calculateSum
+- Module is a collection of js code which is separate and private to itself and it exists independently of any other code and can be exported and used 
+- Whatever is inside a function is privately scoped inside the function
+- All the code of the modules is wrapped inside a function when you call it via require and then it is called
+- The function in which it is wrapped is a IIFE ( immediately  Invoked Function Expression )
+- How are variables and functions private in different modules?
+    - Its because of IFFE and require statement
+    - How do you get access to module.exports
+- Module in module.exports is added by node
+- When my code is wrapped inside an IFFE function when we use the require function then this function is passed with a parameter names module which is an empty object
+- Require is also passed so whenever we create a file its passed in IFFE and module and require is passed in it
+- Nodejs passes module and requires as parameters to the IIFE 
+- Javascript is a synchronous single threaded language
+- LibUV is the superpower which interacts with OS and performs all the activities beside the v8 engine
+- libUV offloads all the node I/O js work
+- Libuv is a c library for asyncronous I/O operations
+- V8 is also a c++ program
+- Syntax error is generated when our code is not able to generate AST
+- Languages
+    - Interpretted language
+        - Code Is written line by line and executed line by line
+    - Compiled Language
+        - ASAP we give code then the whole code is compiled and High level language code is converted to machine code and then its executed 
+- JS v8 engine has a interpreter as well as a compiler
+- The compilation method in JS is known as JIT ( Just In Time ) compilation
+- Javascript uses the power of both interpreter and compiler. As soon as we give javascript to v8 engine its quickly executes it because of ignition interpreter and as soon as it  sees opportunity to optimise code it passes code to turbofan compiler and there the optimised machine code is generated and then it is executed 
+- Earlier Javascript was a interpreter language using crankshaft inside but now its a JIT complile language using ignition integrator and turbofan compiler
+-  
+
+
+
+
+- Code is passed to V8 engine and following things happen
+    - Stage 1 :- Parsing of the code happens
+        - a) Lexical Analysis :- code is broken down into tokens
+            - Var a = 10
+            - Var, a, =, 10 :- all of them are seperate tokens (Tokenization )
+            - CODE ———> TOKENS 
+        - b) Syntax Ananlysis :- 
+            - AST ( Abstract Syntax Tree is generated )
+        - c) Interpretter -> 
+            - This AST is passed to a interpreter [ Ignition ] —> job of this interpreter is to convert your AST to Byte code ——> Execution happens  
+            - Hot code = code that is reused many times and during interpretation conversion the hot code is passed to turbo fan compiler and the optimised version of code is generated and this optimised version is stored and used 
+        - d) Compiler - [ Turbo Fan ] - 
+            - Hot code = code that is reused many times
+- The event loop is the traffic manager that helps JavaScript juggle instant and delayed tasks even though it can only do one thing at a time. The job of event loop is to push tasks from callback queue to call stack in correct time and in correct order so call Stack has to be empty / main thread has to be non blocked / busy
+* The Event Loop's Queues (Broadly)
+* Macro Task Queue (a.k.a. Task Queue)Includes:
+    * setTimeout
+    * setInterval
+    * HTTP request callbacks (XHR/fetch)
+    * File system callbacks (in Node.js)
+    * setImmediate (Node.js)
+* Micro Task Queue (higher priority)Includes:
+    * Promises (.then, catch, finally)
+    * process.nextTick() (Node.js)
+* 🔁 After every task from the Macro Queue, all Micro Tasks are drained before the next Macro Task.
+- There is no strict priority among them in the callback queue — they are queued in the order they become ready.
+* Microtasks always get priority.
+* Rule of Thumb:
+* 🧬 1 macro → all micro → next macro → all micro tasks
+* One full cycle of a event loop is called as Tick
+* By defaults the UV thread pool size is 4
+* Node Js is single threaded if only synchronous code is passed and is multiple threaded if asynchronous code is passed so it depends
+* We can change the size of the thread pool 
+* Process.env.UV_THREADOOL_SIZE  = 2
+* By above code we can change the UV thread pool size
+* Does the API requests made to the server uses thread pool —> No
+* how libuv and epoll work when there is an incoming api request on server can you explain in lame terms
+    * First, Who's Who?
+        * Node.js: The JavaScript engine you're writing code in.
+        * Libuv: A C/C++ library under Node.js that handles the dirty work — like networking, file system, etc.
+        * epoll (on Linux): A super-efficient tool used by Libuv to watch for I/O activity (like a new incoming HTTP request). 
+    * 🏢 Imagine a Restaurant:
+        * You (Node.js) are the only chef in a restaurant (single-threaded!).
+        * Libuv is the waiter helping you by watching the door, kitchen timer, and delivery bell.
+        * epoll is like a magical clipboard that can notify the waiter whenever something happens — like:
+            * A customer enters (new request),
+            * A dish is ready (file is read),
+            * A delivery arrives (network response comes in).
+    * Now, A Customer Walks In (API request):
+        * 🔔 A customer (an incoming API request) comes to the restaurant.
+        * 🧾 The waiter (Libuv) registers this request with the clipboard (epoll).
+        * 🚶 The chef (Node.js) keeps cooking, not handling it immediately.
+        * ✅ epoll watches for “activity” — like “this request has data ready to be read”.
+        * 🕐 When the data is ready, epoll nudges Libuv, saying: “Hey! This request is ready!”
+        * 🗂️ Libuv then adds a callback to the task queue.
+        * 🍳 Node.js sees the callback in the event loop and executes it — your handler code runs, sends a response.
+* Epoll - It is a scalable I/O event Notification mechanism 
+* What are socket descriptors and what are file descriptors?
+* What is node event driven architectrure
+* What is epoll and kqueue
+* What is fds - socket descriptors
+* Event emitters, buffrers, streams, event listener, pipes,
+* Poll uses the red black tree DS      
+* Macro callback - the settimeout uses the minheap DS
+* The data structure used inside lib uv to manage this set interval timer is minheap DS  
+
+Commont IIFE :-
+(function() {})();
+(() => {})();
++function() {}();     // Less common but valid
+!function() {}();     //
+
+
+SERVER
+
+- Server :- proxy server, dns server, http server, microservice,  
+- Server word is loosely used for hardware, software, applications also
+- TCP / IP protocol 
+- Protocol - set of rules 
+- HTTP server [ Hyper text transfer protocol ], FTP server [ file transfer protocol  ], SMTP [ simple mail transfer protocol ] server and more
+* IP - Finds the destination (like an address on an envelope), Just like writing an address on a parcel so it knows where to go, IP is responsible for finding the best route to deliver your data to the right destination.Every device (your phone, laptop, etc.) has an IP address — like a digital home address.
+* TCP (Transmission Control Protocol) Imagine you're sending a big book, but the postal service only handles small boxes, TCP splits the book into many small boxes (packets), numbers them, sends them, and makes sure they arrive correctly and in order., If a box goes missing, TCP says: "Hey! Resend that box!"Ensures delivery is complete and correct (like a reliable courier tracking system)
+* Without TCP/IP, the internet simply wouldn’t work. It’s the postal system of the digital world.
+* TCP/IP is doing the hard work in the background:
+    * Splitting the data,
+    * Sending it over the internet to the other person’s device,
+    * Reassembling it correctly when it gets there.
+* What is https and ssl certificate?
+
+Database
+
+- Database :- It is an organised collection of data or structured way of collecting data, Where data is stored (a digital cupboard)
+- DBMS :- The system that helps you manage, organize, and access that data easily, so DBMS is a software used to interact with the database
+-  Mongo DB :- In Mongo DB we do have a collection and in collection we do have documents 
+- Table in relational DB = Collection in Mongo DB
+- Row  in relational DB = Documents in Mongo DB
+- Columns  in relational DB = Fields in Mongo DB
+- noSQL databases are heavily used in Distributed computing
+- Mongo Db is cross platform document oriented database program
+- Community version - free version, enterprise version - paid version
+- We can use Connection string to connect to the database on server and we use npm mongoldb package to do so
+- Npm package = npm library = npm module
+- So npm is a library management system for javascript so it is a repository with collection of lot of packages 
+
+
+API
+
+- GET, POST, PUT, PATCH, and DELETE are types of HTTP methods used in APIs (Application Programming Interfaces).
+- GET – Fetch Data - To retrieve data from a server.
+- POST – Create New Data, To send new data to the server (e.g., creating a new user, comment, post)
+- PUT – Update Entire Data, To update or replace an existing resource completely.
+- PATCH – Update Partially, To partially update an existing resource.
+- DELETE – Remove Data, Purpose: To delete data from the server.
+
+
+Package.JSON
+- Dependencies mean the modules / package our app is dependent on
+- What is .bin folder in node modules
+- Package.json  -  it is the metadata 
+- In version we have major.minor.patch - so major version is updated when we do have a major breaking change and minor version is changed when our change is backward compatible and we just wanted to release a new feature and patch is updated when we do have a bug fix
+- ^ used in the version is then our project can be updated to 4.x.x so It means only minor and patch can be updated automatically 
+- ~ used in version is then only patch can be updated, 4.2.x
+- If we do not have ^ and ~ then  the package will not be automatically update  
+
+
+- Difference between app.all and app.use in express js  
+- How to implement authguard in react js
+- (Req, res), (req, res, next), (err, req, res, next) this format of parameters has to be used with app.use
+- The correct process is to connect to Data base then only we should do app.listen
+- What is a model and schema in mongoose
+- what is __V in the mongoldb document, never play with automatically generated fields by mongoldb
+- What is difference between js object and json
+- express.json() reads the json object and converts it to Jabascript object and then adds the object to req.body in the request
+- If two documents are same then which document is given by the findone method in mongoose query
+- FindByIdAndUpdate in this we can pass runValidators as true to make validation to be called every time
+- bcrypt.encrypt(‘password’) and for compare crypt.compare(password, encryptedPassword)
+
+Authentication
+- JWT token has three parts header, payload [ data is hidden inside this ], signature
+  
+
+
+Logical DB Query & Compound Indexes
+- Can we have multiple index
+- Pre method in schema of mongoose
+- Method in schema of mongoose
+- Why we should not create a lot of indexes in a collection
+- Why do we need index in DB
+- Advantages and disadvantages of creating indexes
+    * Indexes use extra memory.
+    * Having too many indexes can slow down writes (insert/update).
+    * Use indexes only on fields you frequently search or sort by.
+- What is compound index
+- $or in mongoose
+- Role of index - 
+- Server sent Cookies does not set in http or in insecure networks [ not in same network or in same domain ] , so we have to have ssl or https then the cookie gets set
+- So we need to whitelist our domain to make this work
+- In axios we need to have withcredentials set to true to have set cookies in the browser when you get from response   
+- What is pm2 and what is the purpose of this pm2
+- How to enable full ssl
+- What is Amazon Ses and what is the use of it
+- whta is cloudflare and what is godaddy
+- Cron tabs to schedule  a task
+- And for sending millions of emails you can use queue, or send in bulk or can send in batches
+- Bee queue can be used to send emails of greater sizes and can send email in batched
+- 10000 can work good 
+- BullMq / Bee queue package can be use to maintain queue and doing large amounts of things in batches and it does not block main thread
+-  you can also use amazon set service to send bulk email it will handle the bulk sending and batching by itself
+- 
+
+
+Socket
+
+- It is a bidirectional connection
+- Socket.IO is a library that enables low-latency [ responds very quickly — there's little to no delay, connection is smooth and fast ], bidirectional and event-based communication between a client and a server.
+- You can also use auth in socket.io and in which you can pass token as well
+- You can verify jwt token 
+

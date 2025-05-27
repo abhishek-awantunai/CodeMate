@@ -4,12 +4,17 @@ require("dotenv").config();
 const express = require('express');
 const connectToDatabase = require("./src/config/database");
 const authRouter = require('./src/routers/auth');
+// const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
 const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
+// app.use(cors());
+app.use(cookieParser());
 
 app.use('/auth', authRouter);
 
