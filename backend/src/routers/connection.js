@@ -1,10 +1,12 @@
 const express = require('express');
 const connectionRouter = express.Router();
-const { sendConnectionController, receiveConnectionController } = require('../controllers/connection');
+const { sendConnectionController, receiveConnectionController, getConnectionRequests, getConnectionsList } = require('../controllers/connection');
 const { userAuth } = require('../middleware/auth');
 
 
+connectionRouter.get('/requests', userAuth, getConnectionRequests);
+connectionRouter.get('/:status', userAuth, getConnectionsList);
+connectionRouter.post('/receive/:status/:connectionRequestId', userAuth, receiveConnectionController);
 connectionRouter.post('/send/:status/:connectionId', userAuth, sendConnectionController);
-connectionRouter.post('/receive', userAuth, receiveConnectionController);
 
 module.exports = connectionRouter;
