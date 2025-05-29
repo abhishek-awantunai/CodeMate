@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { loginRequest, signupRequest } from '../store/slices/authSlice';
 
 const Login = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { loading, error, user } = useSelector((state) => state.auth);
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -21,9 +27,27 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission here
-        console.log(formData);
+        if (isLogin) {
+            dispatch(loginRequest({
+                email: formData.email,
+                password: formData.password
+            }));
+        } else {
+            dispatch(signupRequest(formData));
+        }
     };
+
+    useEffect(() => {
+        // Redirect to feed page if user is already logged in
+        if (user || localStorage.getItem('token')) {
+            navigate('/feed', { replace: true });
+        }
+    }, [user, navigate]);
+
+    // If user is already logged in, don't render the login form
+    if (user || localStorage.getItem('token')) {
+        return null;
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center p-4">
@@ -37,6 +61,12 @@ const Login = () => {
                         {isLogin ? "Welcome back!" : "Create your account"}
                     </p>
                 </div>
+
+                {error && (
+                    <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+                        {error}
+                    </div>
+                )}
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,8 +153,13 @@ const Login = () => {
                     <button
                         type="submit"
                         className="btn btn-primary w-full bg-gradient-to-r from-pink-500 to-orange-500 border-none hover:from-pink-600 hover:to-orange-600 text-white"
+                        disabled={loading}
                     >
-                        {isLogin ? "Login" : "Sign Up"}
+                        {loading ? (
+                            <span className="loading loading-spinner"></span>
+                        ) : (
+                            isLogin ? "Login" : "Sign Up"
+                        )}
                     </button>
                 </form>
 
@@ -133,6 +168,7 @@ const Login = () => {
                     <button
                         onClick={() => setIsLogin(!isLogin)}
                         className="text-pink-500 hover:text-orange-500 transition-colors"
+                        disabled={loading}
                     >
                         {isLogin
                             ? "Don't have an account? Sign Up"

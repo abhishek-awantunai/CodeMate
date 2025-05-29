@@ -1,32 +1,65 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
-import axios from 'axios';
-import { loginRequest, loginSuccess, loginFailure } from '../slices/authSlice';
+import api from '../../services/api';
+import {
+  loginSuccess,
+  loginFailure,
+  signupSuccess,
+  signupFailure,
+} from '../slices/authSlice';
 
-// API configuration
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3000/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Login saga
 function* handleLogin(action) {
   try {
-    yield put(loginRequest());
     const { email, password } = action.payload;
-    
     const response = yield call(api.post, '/auth/login', {
       email,
-      password,
+      password
     });
-
-    yield put(loginSuccess(response.data));
+    
+    if (response.data.status && response.data.data) {
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(response.data.data));
+      
+      // Update Redux state
+      yield put(loginSuccess({
+        user: response.data.data,
+        message: response.data.message
+      }));
+      
+      // Navigate to feed page
+      window.location.href = '/feed';
+    } else {
+      yield put(loginFailure('Invalid response from server'));
+    }
   } catch (error) {
     yield put(loginFailure(error.response?.data?.message || 'Login failed'));
   }
 }
 
+function* handleSignup(action) {
+  try {
+    const response = yield call(api.post, '/auth/signup', action.payload);
+    
+    if (response.data.status && response.data.data) {
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(response.data.data));
+      
+      // Update Redux state
+      yield put(signupSuccess({
+        user: response.data.data,
+        message: response.data.message
+      }));
+      
+      // Navigate to feed page
+      window.location.href = '/feed';
+    } else {
+      yield put(signupFailure('Invalid response from server'));
+    }
+  } catch (error) {
+    yield put(signupFailure(error.response?.data?.message || 'Signup failed'));
+  }
+}
+
 export default function* authSaga() {
   yield takeLatest('auth/loginRequest', handleLogin);
+  yield takeLatest('auth/signupRequest', handleSignup);
 } 

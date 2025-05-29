@@ -1,6 +1,7 @@
 // Load environment variables
 require("dotenv").config();
 
+const cors = require('cors');
 const express = require('express');
 const connectToDatabase = require("./src/config/database");
 const cookieParser = require('cookie-parser');
@@ -13,8 +14,13 @@ const app = express();
 
 const PORT = process.env.PORT || 8000;
 
+app.use(cors({
+    origin: 'http://localhost:8000',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
-// app.use(cors());
 app.use(cookieParser());
 
 app.use('/auth', authRouter);
