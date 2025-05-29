@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.CODEMATE_API_URL || 'http://localhost:8001/';
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // This enables sending cookies with requests
 });
 
 // Request interceptor
@@ -25,7 +26,14 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Store any new cookies received in the response
+    const cookies = response.headers['set-cookie'];
+    if (cookies) {
+      document.cookie = cookies;
+    }
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
