@@ -1,52 +1,147 @@
-import React from 'react'
+import React, { useState } from 'react';
 
 const Login = () => {
+    const [isLogin, setIsLogin] = useState(true);
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        age: '',
+        gender: 'male',
+        password: '',
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Handle form submission here
+        console.log(formData);
+    };
+
     return (
-        <>
-            <div className=' h-screen bg-gray-100'>
-                <h1 className='text-center text-[28px] pb-[30px] pt-[60px]'>Welcome to CODEMATE</h1>
-                <div className='flex justify-center items-center'>
-                    <div className="card lg:card-side bg-base-100 shadow-sm w-2/3">
-                        <figure className='w-[500px] px-[40px]'>
-                            <img
-                                src="https://media.istockphoto.com/id/1281150061/vector/register-account-submit-access-login-password-username-internet-online-website-concept.jpg?s=612x612&w=0&k=20&c=9HWSuA9IaU4o-CK6fALBS5eaO1ubnsM08EOYwgbwGBo="
-                                alt="Album" />
-                        </figure>
-                        <div className="card-body">
-                            <fieldset className="fieldset">
-                                <legend className="fieldset-legend">First Name</legend>
-                                <input type="text" className="input w-full" placeholder="Type here" />
-                            </fieldset>
-                            <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Last Name</legend>
-                                <input type="text" className="input w-full" placeholder="Type here" />
-                            </fieldset>
-                            <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Email</legend>
-                                <input type="email" className="input w-full" placeholder="Type here" />
-                            </fieldset>
-                            <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Age</legend>
-                                <input type="number" className="input w-full" placeholder="Type here" />
-                            </fieldset>
-                            <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Gender</legend>
-                                <select defaultValue="Pick a browser" className="select w-full">
-                                    <option disabled={true}>Pick a gender</option>
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                    <option>Other</option>
+        <div className="min-h-screen bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
+                {/* Logo and Title */}
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
+                        CodeMate
+                    </h1>
+                    <p className="text-gray-500 mt-2">
+                        {isLogin ? "Welcome back!" : "Create your account"}
+                    </p>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    {!isLogin && (
+                        <>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="form-control">
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        placeholder="First Name"
+                                        className="input input-bordered w-full"
+                                        value={formData.firstName}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-control">
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        placeholder="Last Name"
+                                        className="input input-bordered w-full"
+                                        value={formData.lastName}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-control">
+                                <input
+                                    type="number"
+                                    name="age"
+                                    placeholder="Age"
+                                    className="input input-bordered w-full"
+                                    value={formData.age}
+                                    onChange={handleInputChange}
+                                    required
+                                    min="18"
+                                />
+                            </div>
+
+                            <div className="form-control">
+                                <select
+                                    name="gender"
+                                    className="select select-bordered w-full"
+                                    value={formData.gender}
+                                    onChange={handleInputChange}
+                                    required
+                                >
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
                                 </select>
-                            </fieldset>
-                            <button className="btn bg-black text-white border-black">
-                                Sign Up
-                            </button>
-                        </div>
+                            </div>
+                        </>
+                    )}
+
+                    <div className="form-control">
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email Address"
+                            className="input input-bordered w-full"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                        />
                     </div>
+
+                    <div className="form-control">
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            className="input input-bordered w-full"
+                            value={formData.password}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="btn btn-primary w-full bg-gradient-to-r from-pink-500 to-orange-500 border-none hover:from-pink-600 hover:to-orange-600 text-white"
+                    >
+                        {isLogin ? "Login" : "Sign Up"}
+                    </button>
+                </form>
+
+                {/* Toggle between Login and Sign Up */}
+                <div className="text-center mt-6">
+                    <button
+                        onClick={() => setIsLogin(!isLogin)}
+                        className="text-pink-500 hover:text-orange-500 transition-colors"
+                    >
+                        {isLogin
+                            ? "Don't have an account? Sign Up"
+                            : "Already have an account? Login"}
+                    </button>
                 </div>
             </div>
-        </>
-    )
-}
+        </div>
+    );
+};
 
-export default Login
+export default Login;
