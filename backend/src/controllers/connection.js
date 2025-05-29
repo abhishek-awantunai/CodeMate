@@ -125,9 +125,46 @@ const getConnectionsList = async (req, res) => {
     }
 }
 
+const connectionFindController = async (req, res) => {
+    try {
+        const user = req.user;
+        const userId = user?._id;
+
+        const connections = await Connection.find({
+            $or: [
+                {userId},
+                {connectionId: userId},
+            ]
+        });
+
+        const userSet = [];
+        connections.forEach(connection => {
+            userSet.push(connection?.userId.toString());
+            userSet.push(connection?.connectionId.toString());
+        })
+        
+        const distinctUserSet = new Set(userSet)
+
+        const users = await User.find({
+            "_id": {
+                $nin: [...distinctUserSet]
+            }
+        })
+
+        res.json({
+            message: 'List fetched successfully',
+            users
+        })
+    
+    } catch (error) {
+        return res.status(400).json({ error: error.message || 'Internal Server Error' });
+    }
+}
+
 module.exports = {
+    getConnectionsList,
+    getConnectionRequests,
+    connectionFindController,
     sendConnectionController,
     receiveConnectionController,
-    getConnectionRequests,
-    getConnectionsList,
 };
