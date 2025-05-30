@@ -28,7 +28,8 @@ const sendConnectionController = async (req, res) => {
         await newConnection.save();
         
         res.json({
-            message: `${user?.firstName} ${user?.lastName} sent connection request to ${connectionUser.firstName} ${connectionUser?.lastName}`,
+            status: true,
+            message: `${user?.firstName} ${user?.lastName} ${status === 'interested' ? 'sent' : 'ignored'} connection request to ${connectionUser.firstName} ${connectionUser?.lastName}`,
             data: newConnection,
         });
 
@@ -67,6 +68,7 @@ const receiveConnectionController = async (req, res) => {
         await connection.save();
 
         res.json({
+            status: true,
             message: `Connection request ${status} successfully`,
             data: connection,
         });
@@ -86,6 +88,7 @@ const getConnectionRequests = async (req, res) => {
         }).populate('userId', userDataToBePassed);
 
         res.json({
+            status: true,
             message: 'Connection requests retrieved successfully',
             data: connections,
         });
@@ -117,6 +120,7 @@ const getConnectionsList = async (req, res) => {
         }).populate((receiveStatus.includes(status) ? 'userId' : 'connectionId'), userDataToBePassed);
 
         res.json({
+            status: true,
             message: 'Connection list retrieved successfully',
             data: connections,
         });
@@ -152,6 +156,7 @@ const connectionFindController = async (req, res) => {
         })
 
         res.json({
+            status: true,
             message: 'List fetched successfully',
             users
         })

@@ -10,6 +10,7 @@ const profileViewController = async (req, res) => {
         }
         const user = await User.findOne({_id: profileId});
         res.json({
+            status: true,
             message: 'User fetched successfully',
             data: user,
         });
@@ -31,6 +32,7 @@ const profileEditController = async (req, res) => {
             await user.save();
 
             res.json({
+                status: true,
                 message: 'User profile updated successfully',
                 data: user,
             });
@@ -60,6 +62,7 @@ const profileUpdatePasswordController = async (req, res) => {
         await user.save();
 
         res.json({
+            status: true,
             message: 'User profile updated successfully',
             data: user,
         });
@@ -78,6 +81,7 @@ const profileActivateController = async (req, res) => {
         await user.save();
 
         res.json({
+            status: true,
             message: 'User activated successfully',
             data: user,
         });
@@ -96,6 +100,7 @@ const profileDeactivateController = async (req, res) => {
         await user.save();
 
         res.json({
+            status: true,
             message: 'User activated successfully',
             data: user,
         });
@@ -108,6 +113,7 @@ const profileListController = async (req, res) => {
     try {
         const users = await User.find({});
         res.json({
+            status: true,
             message: 'User list fetched successfully',
             data: users,
         });

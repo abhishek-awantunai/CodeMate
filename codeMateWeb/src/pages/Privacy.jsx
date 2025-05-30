@@ -1,37 +1,10 @@
 import { Link } from 'react-router-dom';
+import Header from '../components/Header';
 
 const Privacy = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top Navigation Bar */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link to="/feed" className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
-                CodeMate
-              </Link>
-            </div>
-            <div className="flex items-center space-x-8">
-              <Link to="/about" className="text-gray-600 hover:text-pink-500 transition-colors">
-                About
-              </Link>
-              <Link to="/privacy" className="text-pink-500 font-medium">
-                Privacy
-              </Link>
-              <Link to="/help" className="text-gray-600 hover:text-pink-500 transition-colors">
-                Help
-              </Link>
-              <Link to="/profile" className="text-gray-600 hover:text-pink-500 transition-colors">
-                Profile
-              </Link>
-              <button className="btn btn-outline btn-sm text-pink-500 border-pink-500 hover:bg-pink-500 hover:text-white">
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

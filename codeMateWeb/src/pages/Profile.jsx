@@ -1,34 +1,66 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Header from '../components/Header';
+import { fetchProfilesRequest } from '../store/slices/profileSlice';
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const { userProfile, loading, error } = useSelector((state) => state.profile);
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    name: 'Sarah Johnson',
-    age: 28,
-    location: 'San Francisco, CA',
-    bio: 'Full-stack developer passionate about creating beautiful and functional web applications. Love working with React, Node.js, and Python.',
-    skills: ['React', 'Node.js', 'Python', 'TypeScript', 'AWS'],
-    experience: [
-      {
-        title: 'Senior Developer',
-        company: 'TechCorp',
-        duration: '2020 - Present'
-      },
-      {
-        title: 'Full Stack Developer',
-        company: 'WebSolutions',
-        duration: '2018 - 2020'
-      }
-    ],
-    education: [
-      {
-        degree: 'B.S. Computer Science',
-        school: 'Stanford University',
-        year: '2018'
-      }
-    ]
-  });
+
+  const fetchProfile = useCallback(() => {
+    dispatch(fetchProfilesRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  // Refresh profile data every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(fetchProfile, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchProfile]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex justify-center items-center h-64">
+          <div className="loading loading-spinner loading-lg text-pink-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Error!</strong>
+            <span className="block sm:inline"> {error}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userProfile) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Profile Not Found</h2>
+            <p className="text-gray-600">Unable to load your profile. Please try again later.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
@@ -36,35 +68,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top Navigation Bar */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link to="/feed" className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
-                CodeMate
-              </Link>
-            </div>
-            <div className="flex items-center space-x-8">
-              <Link to="/about" className="text-gray-600 hover:text-pink-500 transition-colors">
-                About
-              </Link>
-              <Link to="/privacy" className="text-gray-600 hover:text-pink-500 transition-colors">
-                Privacy
-              </Link>
-              <Link to="/help" className="text-gray-600 hover:text-pink-500 transition-colors">
-                Help
-              </Link>
-              <Link to="/profile" className="text-pink-500 font-medium">
-                Profile
-              </Link>
-              <button className="btn btn-outline btn-sm text-pink-500 border-pink-500 hover:bg-pink-500 hover:text-white">
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -77,8 +81,8 @@ const Profile = () => {
                 <div className="absolute -bottom-16 left-8">
                   <div className="relative">
                     <img
-                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330"
-                      alt="Profile"
+                      src={userProfile.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330"}
+                      alt={`${userProfile.firstName} ${userProfile.lastName}`}
                       className="w-32 h-32 rounded-full border-4 border-white object-cover"
                     />
                     {isEditing && (
@@ -95,8 +99,11 @@ const Profile = () => {
               <div className="pt-20 pb-8 px-8">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{profileData.name}</h1>
-                    <p className="text-gray-600">{profileData.location}</p>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      {userProfile.firstName} {userProfile.lastName}, {userProfile.age}
+                    </h1>
+                    <p className="text-gray-600">{userProfile.gender}</p>
+                    <p className="text-gray-600 mt-1">{userProfile.address}</p>
                   </div>
                   <button
                     onClick={handleEdit}
@@ -105,90 +112,60 @@ const Profile = () => {
                     {isEditing ? 'Save Changes' : 'Edit Profile'}
                   </button>
                 </div>
-                <p className="mt-4 text-gray-600">{profileData.bio}</p>
+                <p className="mt-4 text-gray-600">{userProfile.bio}</p>
               </div>
             </div>
 
-            {/* Skills Section */}
+            {/* Contact Information */}
             <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Skills</h2>
-              <div className="flex flex-wrap gap-2">
-                {profileData.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="px-4 py-2 bg-pink-50 text-pink-600 rounded-full text-sm font-medium"
-                  >
-                    {skill}
-                  </span>
-                ))}
-                {isEditing && (
-                  <button className="px-4 py-2 border-2 border-dashed border-gray-300 text-gray-500 rounded-full text-sm hover:border-pink-500 hover:text-pink-500">
-                    + Add Skill
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Experience Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Experience</h2>
-              <div className="space-y-6">
-                {profileData.experience.map((exp, index) => (
-                  <div key={index} className="flex justify-between">
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{exp.title}</h3>
-                      <p className="text-gray-600">{exp.company}</p>
-                    </div>
-                    <span className="text-gray-500">{exp.duration}</span>
-                  </div>
-                ))}
-                {isEditing && (
-                  <button className="text-pink-500 hover:text-pink-600">
-                    + Add Experience
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Education Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Education</h2>
-              <div className="space-y-6">
-                {profileData.education.map((edu, index) => (
-                  <div key={index} className="flex justify-between">
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{edu.degree}</h3>
-                      <p className="text-gray-600">{edu.school}</p>
-                    </div>
-                    <span className="text-gray-500">{edu.year}</span>
-                  </div>
-                ))}
-                {isEditing && (
-                  <button className="text-pink-500 hover:text-pink-600">
-                    + Add Education
-                  </button>
-                )}
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h2>
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-gray-600">{userProfile.email}</span>
+                </div>
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <span className="text-gray-600">{userProfile.phoneNumber}</span>
+                </div>
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="text-gray-600">{userProfile.address}</span>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Right Column - Stats & Settings */}
           <div className="space-y-8">
-            {/* Stats Card */}
+            {/* Account Information */}
             <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Profile Stats</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Account Information</h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Profile Views</span>
-                  <span className="font-semibold text-gray-900">1,234</span>
+                  <span className="text-gray-600">Member Since</span>
+                  <span className="font-semibold text-gray-900">
+                    {new Date(userProfile.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Matches</span>
-                  <span className="font-semibold text-gray-900">56</span>
+                  <span className="text-gray-600">Last Updated</span>
+                  <span className="font-semibold text-gray-900">
+                    {new Date(userProfile.updatedAt).toLocaleDateString()}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Messages</span>
-                  <span className="font-semibold text-gray-900">89</span>
+                  <span className="text-gray-600">Account Status</span>
+                  <span className={`font-semibold ${userProfile.isActive ? 'text-green-600' : 'text-red-600'}`}>
+                    {userProfile.isActive ? 'Active' : 'Inactive'}
+                  </span>
                 </div>
               </div>
             </div>

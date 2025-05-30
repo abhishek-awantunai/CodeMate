@@ -1,16 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-  connections: [],
-  selectedConnection: null,
-  messages: {},
-  loading: false,
-  error: null,
-};
-
 const chatSlice = createSlice({
   name: 'chat',
-  initialState,
+  initialState: {
+    connections: [],
+    selectedConnection: null,
+    messages: {},
+    loading: false,
+    error: null
+  },
   reducers: {
     fetchConnectionsRequest: (state) => {
       state.loading = true;
@@ -19,9 +17,7 @@ const chatSlice = createSlice({
     fetchConnectionsSuccess: (state, action) => {
       state.loading = false;
       state.connections = action.payload;
-      if (action.payload.length > 0 && !state.selectedConnection) {
-        state.selectedConnection = action.payload[0];
-      }
+      state.error = null;
     },
     fetchConnectionsFailure: (state, action) => {
       state.loading = false;
@@ -32,11 +28,15 @@ const chatSlice = createSlice({
     },
     fetchMessagesRequest: (state) => {
       state.loading = true;
+      state.error = null;
     },
     fetchMessagesSuccess: (state, action) => {
       state.loading = false;
-      const { connectionId, messages } = action.payload;
-      state.messages[connectionId] = messages;
+      state.messages = {
+        ...state.messages,
+        [action.payload.connectionId]: action.payload.messages
+      };
+      state.error = null;
     },
     fetchMessagesFailure: (state, action) => {
       state.loading = false;
@@ -44,6 +44,7 @@ const chatSlice = createSlice({
     },
     sendMessageRequest: (state) => {
       state.loading = true;
+      state.error = null;
     },
     sendMessageSuccess: (state, action) => {
       state.loading = false;
@@ -52,12 +53,13 @@ const chatSlice = createSlice({
         state.messages[connectionId] = [];
       }
       state.messages[connectionId].push(message);
+      state.error = null;
     },
     sendMessageFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
-    },
-  },
+    }
+  }
 });
 
 export const {
@@ -70,7 +72,7 @@ export const {
   fetchMessagesFailure,
   sendMessageRequest,
   sendMessageSuccess,
-  sendMessageFailure,
+  sendMessageFailure
 } = chatSlice.actions;
 
 export default chatSlice.reducer; 

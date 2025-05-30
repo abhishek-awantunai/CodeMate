@@ -1,150 +1,136 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchConnectionsRequest,
-  fetchMessagesRequest,
-  sendMessageRequest,
-  selectConnection,
-} from '../store/slices/chatSlice';
+import Header from '../components/Header';
+import { fetchConnectionsRequest, selectConnection } from '../store/slices/chatSlice';
 
 const Chat = () => {
   const dispatch = useDispatch();
-  const { connections, selectedConnection, messages, loading } = useSelector((state) => state.chat);
-  const [messageInput, setMessageInput] = useState('');
+  const { connections, selectedConnection, loading, error } = useSelector((state) => state.chat);
 
-  useEffect(() => {
+  const fetchConnections = useCallback(() => {
     dispatch(fetchConnectionsRequest());
   }, [dispatch]);
 
   useEffect(() => {
-    if (selectedConnection) {
-      dispatch(fetchMessagesRequest({ connectionId: selectedConnection.id }));
-    }
-  }, [dispatch, selectedConnection]);
+    fetchConnections();
+  }, [fetchConnections]);
 
-  const handleConnectionSelect = (connection) => {
+  const handleSelectConnection = (connection) => {
     dispatch(selectConnection(connection));
   };
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (messageInput.trim() && selectedConnection) {
-      dispatch(sendMessageRequest({
-        connectionId: selectedConnection.id,
-        content: messageInput.trim(),
-      }));
-      setMessageInput('');
-    }
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex justify-center items-center h-64">
+          <div className="loading loading-spinner loading-lg text-pink-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Error!</strong>
+            <span className="block sm:inline"> {error}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!connections || connections.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">No Connections Yet</h2>
+            <p className="text-gray-600">Start matching with people to see your connections here.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Connections List */}
-      <div className="w-1/4 bg-white border-r border-gray-200">
-        <div className="p-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold">Connections</h2>
-        </div>
-        {loading ? (
-          <div className="p-4 text-center">Loading...</div>
-        ) : connections.length === 0 ? (
-          <div className="p-4 text-center text-gray-500">No connections found</div>
-        ) : (
-          <div className="overflow-y-auto h-[calc(100vh-4rem)]">
-            {connections.map((connection) => (
-              <div
-                key={connection.id}
-                className={`p-4 cursor-pointer hover:bg-gray-50 ${
-                  selectedConnection?.id === connection.id ? 'bg-gray-100' : ''
-                }`}
-                onClick={() => handleConnectionSelect(connection)}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                    {connection.avatar && (
-                      <img
-                        src={connection.avatar}
-                        alt={connection.name}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="font-medium">{connection.name}</h3>
-                    <p className="text-sm text-gray-500">{connection.lastMessage}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Chat Window */}
-      <div className="flex-1 flex flex-col">
-        {selectedConnection ? (
-          <>
-            {/* Chat Header */}
-            <div className="p-4 border-b border-gray-200 bg-white">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                  {selectedConnection.avatar && (
-                    <img
-                      src={selectedConnection.avatar}
-                      alt={selectedConnection.name}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-                <h2 className="text-xl font-semibold">{selectedConnection.name}</h2>
-              </div>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Connections List */}
+          <div className="lg:col-span-1 bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="p-4 border-b">
+              <h2 className="text-xl font-bold text-gray-900">Connections</h2>
             </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages[selectedConnection.id]?.map((message) => (
+            <div className="divide-y">
+              {connections.map((connection) => (
                 <div
-                  key={message.id}
-                  className={`flex ${
-                    message.isOwn ? 'justify-end' : 'justify-start'
+                  key={connection._id}
+                  onClick={() => handleSelectConnection(connection)}
+                  className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+                    selectedConnection?._id === connection._id ? 'bg-gray-50' : ''
                   }`}
                 >
-                  <div
-                    className={`max-w-[70%] rounded-lg p-3 ${
-                      message.isOwn
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-800'
-                    }`}
-                  >
-                    {message.content}
+                  <div className="flex items-center space-x-4">
+                    <img
+                      src={connection.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330"}
+                      alt={`${connection.firstName} ${connection.lastName}`}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        {connection.firstName} {connection.lastName}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {connection.lastMessage || 'No messages yet'}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* Message Input */}
-            <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200 bg-white">
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={messageInput}
-                  onChange={(e) => setMessageInput(e.target.value)}
-                  placeholder="Type a message..."
-                  className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-blue-500"
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none"
-                >
-                  Send
-                </button>
-              </div>
-            </form>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
-            Select a connection to start chatting
           </div>
-        )}
+
+          {/* Chat Area */}
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg overflow-hidden">
+            {selectedConnection ? (
+              <>
+                <div className="p-4 border-b">
+                  <div className="flex items-center space-x-4">
+                    <img
+                      src={selectedConnection.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330"}
+                      alt={`${selectedConnection.firstName} ${selectedConnection.lastName}`}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900">
+                        {selectedConnection.firstName} {selectedConnection.lastName}
+                      </h2>
+                      <p className="text-sm text-gray-500">Online</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="text-center py-12">
+                    <p className="text-gray-600">Start a conversation with {selectedConnection.firstName}</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="p-4">
+                <div className="text-center py-12">
+                  <p className="text-gray-600">Select a connection to start chatting</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
