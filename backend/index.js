@@ -1,6 +1,7 @@
 // Load environment variables
 require("dotenv").config();
 
+const http = require('http');
 const cors = require('cors');
 const express = require('express');
 const connectToDatabase = require("./src/config/database");
@@ -9,8 +10,12 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('./src/routers/auth');
 const profileRouter = require('./src/routers/profile');
 const connectionRouter = require('./src/routers/connection');
+const { initializeSocket } = require("./socket");
 
 const app = express();
+
+const server = http.createServer(app);
+initializeSocket(server);
 
 const PORT = process.env.PORT || 8000;
 
@@ -31,7 +36,7 @@ const initializeConnection = async () => {
     try {
         await connectToDatabase();
         console.log('Database connected successfully');
-        app.listen(PORT, () => console.log(`Backend Server is Running on PORT: ${PORT}`));
+        server.listen(PORT, () => console.log(`Backend Server is Running on PORT: ${PORT}`));
     } catch (error) {
         console.error('Database connection failed:', error);
         process.exit(1); // Exit the process with failure

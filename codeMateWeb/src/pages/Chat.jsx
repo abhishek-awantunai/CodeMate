@@ -1,11 +1,48 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from '../components/Header';
 import { fetchConnectionsRequest, selectConnection } from '../store/slices/chatSlice';
+import socket from '../utils/socket';
 
 const Chat = () => {
   const dispatch = useDispatch();
   const { connections, selectedConnection, loading, error } = useSelector((state) => state.chat);
+  const currentUserId = useSelector((state) => state.auth.user?._id);
+  const [message, setMessage] = useState('');
+
+  // Dummy messages for demonstration
+  const dummyMessages = [
+    {
+      _id: '1',
+      senderId: currentUserId,
+      content: 'Hey there! How are you doing?',
+      createdAt: new Date(Date.now() - 3600000).toISOString()
+    },
+    {
+      _id: '2',
+      senderId: selectedConnection?.connectionId?._id || selectedConnection?.userId?._id,
+      content: 'Hi! I\'m doing great, thanks for asking. How about you?',
+      createdAt: new Date(Date.now() - 3500000).toISOString()
+    },
+    {
+      _id: '3',
+      senderId: currentUserId,
+      content: 'I\'m good too! Just working on some exciting projects.',
+      createdAt: new Date(Date.now() - 3400000).toISOString()
+    },
+    {
+      _id: '4',
+      senderId: selectedConnection?.connectionId?._id || selectedConnection?.userId?._id,
+      content: 'That sounds interesting! Would love to hear more about it.',
+      createdAt: new Date(Date.now() - 3300000).toISOString()
+    },
+    {
+      _id: '5',
+      senderId: currentUserId,
+      content: 'Sure! Let\'s catch up sometime this week?',
+      createdAt: new Date(Date.now() - 3200000).toISOString()
+    }
+  ];
 
   const fetchConnections = useCallback(() => {
     dispatch(fetchConnectionsRequest());
@@ -22,8 +59,35 @@ const Chat = () => {
     }
   }, [connections, selectedConnection, dispatch]);
 
+  useEffect(() => {
+    if (selectedConnection?._id) {
+      socket.emit('joinRoom', {userId: currentUserId, targetUserId: selectedConnection?._id});
+    }
+
+    return () => {
+      socket.off("messageReceived");
+    };
+  }, [currentUserId, selectedConnection]);
+
   const handleSelectConnection = (connection) => {
     dispatch(selectConnection(connection));
+  };
+
+  // Helper function to get the display user data
+  const getDisplayUser = (connection) => {
+    if (!connection || !currentUserId) return null;
+    return connection.userId._id === currentUserId ? connection.connectionId : connection.userId;
+  };
+
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    // TODO: Implement message sending
+    setMessage('');
+    socket.emit('sendMessage', {
+      userId: currentUserId,
+      targetUserId: selectedConnection?._id,
+      message: message
+    });
   };
 
   if (loading) {
@@ -116,39 +180,44 @@ const Chat = () => {
               <h2 className="text-xl font-bold text-gray-900">Connections</h2>
             </div>
             <div className="divide-y max-h-[calc(100vh-12rem)] overflow-y-auto">
-              {connections.map((connection) => (
-                <div
-                  key={connection._id}
-                  onClick={() => handleSelectConnection(connection)}
-                  className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                    selectedConnection?._id === connection._id ? 'bg-gray-50' : ''
-                  }`}
-                >
-                  <div className="flex items-center space-x-4">
-                    <img
-                      src={connection.userId.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330"}
-                      alt={`${connection.userId.firstName} ${connection.userId.lastName}`}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <h3 className="font-semibold text-gray-900">
-                        {connection.userId.firstName} {connection.userId.lastName}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {connection.userId.bio || 'No bio available'}
-                      </p>
-                      <div className="mt-1 flex flex-wrap gap-2">
-                        <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs">
-                          {connection.userId.age} years
-                        </span>
-                        <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs">
-                          {connection.userId.gender}
-                        </span>
+              {connections.map((connection) => {
+                const displayUser = getDisplayUser(connection);
+                if (!displayUser) return null;
+
+                return (
+                  <div
+                    key={connection._id}
+                    onClick={() => handleSelectConnection(connection)}
+                    className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+                      selectedConnection?._id === connection._id ? 'bg-gray-50' : ''
+                    }`}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <img
+                        src={displayUser.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330"}
+                        alt={`${displayUser.firstName} ${displayUser.lastName}`}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          {displayUser.firstName} {displayUser.lastName}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {displayUser.bio || 'No bio available'}
+                        </p>
+                        <div className="mt-1 flex flex-wrap gap-2">
+                          <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs">
+                            {displayUser.age} years
+                          </span>
+                          <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs">
+                            {displayUser.gender}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -158,32 +227,68 @@ const Chat = () => {
               <>
                 <div className="p-4 border-b">
                   <div className="flex items-center space-x-4">
-                    <img
-                      src={selectedConnection.userId.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330"}
-                      alt={`${selectedConnection.userId.firstName} ${selectedConnection.userId.lastName}`}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <h2 className="text-xl font-bold text-gray-900">
-                        {selectedConnection.userId.firstName} {selectedConnection.userId.lastName}
-                      </h2>
-                      <p className="text-sm text-gray-500">Connected since {new Date(selectedConnection.createdAt).toLocaleDateString()}</p>
-                    </div>
+                    {(() => {
+                      const displayUser = getDisplayUser(selectedConnection);
+                      if (!displayUser) return null;
+
+                      return (
+                        <>
+                          <img
+                            src={displayUser.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330"}
+                            alt={`${displayUser.firstName} ${displayUser.lastName}`}
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                          <div>
+                            <h2 className="text-xl font-bold text-gray-900">
+                              {displayUser.firstName} {displayUser.lastName}
+                            </h2>
+                            <p className="text-sm text-gray-500">Connected since {new Date(selectedConnection.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
                 <div className="flex-1 p-4 overflow-y-auto">
-                  <div className="text-center py-12">
-                    <p className="text-gray-600">Start a conversation with {selectedConnection.userId.firstName}</p>
+                  <div className="space-y-4">
+                    {dummyMessages.map((msg) => {
+                      const isOwnMessage = msg.senderId === currentUserId;
+                      return (
+                        <div
+                          key={msg._id}
+                          className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div
+                            className={`max-w-[70%] rounded-2xl px-4 py-2 ${
+                              isOwnMessage
+                                ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white'
+                                : 'bg-gray-100 text-gray-900'
+                            }`}
+                          >
+                            <p className="text-sm">{msg.content}</p>
+                            <p className={`text-xs mt-1 ${isOwnMessage ? 'text-pink-100' : 'text-gray-500'}`}>
+                              {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
                 <div className="p-4 border-t">
                   <div className="flex space-x-4">
                     <input
                       type="text"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                       placeholder="Type your message..."
                       className="flex-1 input input-bordered focus:outline-none focus:border-pink-500"
                     />
-                    <button className="btn bg-gradient-to-r from-pink-500 to-orange-500 border-none text-white hover:from-pink-600 hover:to-orange-600">
+                    <button
+                      onClick={handleSendMessage}
+                      className="btn bg-gradient-to-r from-pink-500 to-orange-500 border-none text-white hover:from-pink-600 hover:to-orange-600"
+                    >
                       Send
                     </button>
                   </div>

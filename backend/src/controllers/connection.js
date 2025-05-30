@@ -99,7 +99,7 @@ const getConnectionRequests = async (req, res) => {
 
 const getConnectionsList = async (req, res) => {
     try {
-        const { status } = req.params
+        const { status } = req.params;
         const allowedStatuses = ['accepted', 'rejected', 'interested', 'ignored'];
 
         if (!allowedStatuses.includes(status)) {
@@ -109,15 +109,33 @@ const getConnectionsList = async (req, res) => {
         const user = req.user;
         const userId = user._id.toString();
 
-
         const receiveStatus = ['accepted', 'rejected'];
-        const connections = await Connection.find(receiveStatus.includes(status) ? {
-            connectionId: userId,
-            status,
-        } : {
-            userId,
-            status,
-        }).populate((receiveStatus.includes(status) ? 'userId' : 'connectionId'), userDataToBePassed);
+        const isReceiveStatus = receiveStatus.includes(status);
+
+        const query = isReceiveStatus
+            ? {
+                  $or: [
+                      { connectionId: userId, status },
+                      { userId, status }
+                  ]
+              }
+            : {
+                  userId,
+                  status
+              };
+
+        let connectionsQuery = Connection.find(query);
+
+        if (isReceiveStatus) {
+            connectionsQuery = connectionsQuery
+                .populate('userId', userDataToBePassed)
+                .populate('connectionId', userDataToBePassed);
+        } else {
+            connectionsQuery = connectionsQuery
+                .populate('connectionId', userDataToBePassed);
+        }
+
+        const connections = await connectionsQuery;
 
         res.json({
             status: true,
@@ -127,7 +145,8 @@ const getConnectionsList = async (req, res) => {
     } catch (error) {
         return res.status(400).json({ error: error.message || 'Internal Server Error' });
     }
-}
+};
+
 
 const connectionFindController = async (req, res) => {
     try {
