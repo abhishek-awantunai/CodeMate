@@ -15,7 +15,15 @@ const connectionSlice = createSlice({
     },
     fetchPendingConnectionsSuccess: (state, action) => {
       state.loading = false;
-      state.pendingConnections = action.payload;
+      console.clear();
+      console.log(action.payload.data);
+      state.pendingConnections = action.payload.data.map(connection => ({
+        connectionId: connection.connectionId,
+        status: connection.status,
+        createdAt: connection.createdAt,
+        ...connection.userId,
+        _id: connection._id,
+      }));
       state.error = null;
     },
     fetchPendingConnectionsFailure: (state, action) => {
@@ -29,7 +37,7 @@ const connectionSlice = createSlice({
     },
     acceptConnectionSuccess: (state, action) => {
       state.loading = false;
-      state.message = action.payload;
+      state.message = action.payload.message;
       state.pendingConnections = state.pendingConnections.filter(
         conn => conn._id !== action.payload.connectionId
       );
@@ -47,7 +55,7 @@ const connectionSlice = createSlice({
     },
     rejectConnectionSuccess: (state, action) => {
       state.loading = false;
-      state.message = action.payload;
+      state.message = action.payload.message;
       state.pendingConnections = state.pendingConnections.filter(
         conn => conn._id !== action.payload.connectionId
       );

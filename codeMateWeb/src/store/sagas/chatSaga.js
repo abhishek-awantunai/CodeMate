@@ -1,10 +1,13 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import api from '../../services/api';
 import {
+  fetchConnectionsRequest,
   fetchConnectionsSuccess,
   fetchConnectionsFailure,
+  fetchMessagesRequest,
   fetchMessagesSuccess,
   fetchMessagesFailure,
+  sendMessageRequest,
   sendMessageSuccess,
   sendMessageFailure
 } from '../slices/chatSlice';
@@ -12,14 +15,13 @@ import {
 function* handleFetchConnections() {
   try {
     const response = yield call(api.get, '/connection/accepted');
-    
     if (response.data.status) {
-      yield put(fetchConnectionsSuccess(response.data.connections));
+      yield put(fetchConnectionsSuccess(response.data.data));
     } else {
       yield put(fetchConnectionsFailure(response.data.message || 'Failed to fetch connections'));
     }
   } catch (error) {
-    yield put(fetchConnectionsFailure(error.response?.data?.message || 'Failed to fetch connections'));
+    yield put(fetchConnectionsFailure(error.message || 'Failed to fetch connections'));
   }
 }
 
@@ -27,40 +29,32 @@ function* handleFetchMessages(action) {
   try {
     const { connectionId } = action.payload;
     const response = yield call(api.get, `/chat/messages/${connectionId}`);
-    
     if (response.data.status) {
-      yield put(fetchMessagesSuccess({
-        connectionId,
-        messages: response.data.messages
-      }));
+      yield put(fetchMessagesSuccess(response.data.data));
     } else {
       yield put(fetchMessagesFailure(response.data.message || 'Failed to fetch messages'));
     }
   } catch (error) {
-    yield put(fetchMessagesFailure(error.response?.data?.message || 'Failed to fetch messages'));
+    yield put(fetchMessagesFailure(error.message || 'Failed to fetch messages'));
   }
 }
 
 function* handleSendMessage(action) {
   try {
-    const { connectionId, content } = action.payload;
-    const response = yield call(api.post, `/chat/send/${connectionId}`, { content });
-    
+    const { connectionId, message } = action.payload;
+    const response = yield call(api.post, `/chat/send/${connectionId}`, { message });
     if (response.data.status) {
-      yield put(sendMessageSuccess({
-        connectionId,
-        message: response.data.message
-      }));
+      yield put(sendMessageSuccess(response.data.data));
     } else {
       yield put(sendMessageFailure(response.data.message || 'Failed to send message'));
     }
   } catch (error) {
-    yield put(sendMessageFailure(error.response?.data?.message || 'Failed to send message'));
+    yield put(sendMessageFailure(error.message || 'Failed to send message'));
   }
 }
 
 export default function* chatSaga() {
-  yield takeLatest('chat/fetchConnectionsRequest', handleFetchConnections);
-  yield takeLatest('chat/fetchMessagesRequest', handleFetchMessages);
-  yield takeLatest('chat/sendMessageRequest', handleSendMessage);
+  yield takeLatest(fetchConnectionsRequest.type, handleFetchConnections);
+  yield takeLatest(fetchMessagesRequest.type, handleFetchMessages);
+  yield takeLatest(sendMessageRequest.type, handleSendMessage);
 } 

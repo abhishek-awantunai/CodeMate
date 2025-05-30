@@ -16,7 +16,7 @@ function* handleFetchPendingConnections() {
     const response = yield call(api.get, '/connection/requests/received');
     
     if (response.data.status) {
-      yield put(fetchPendingConnectionsSuccess(response.data.connections));
+      yield put(fetchPendingConnectionsSuccess(response.data));
     } else {
       yield put(fetchPendingConnectionsFailure(response.data.message || 'Failed to fetch pending connections'));
     }
@@ -28,7 +28,7 @@ function* handleFetchPendingConnections() {
 function* handleAcceptConnection(action) {
   try {
     const { connectionId } = action.payload;
-    const response = yield call(api.post, `/connection/accept/${connectionId}`);
+    const response = yield call(api.post, `/connection/receive/accepted/${connectionId}`);
     
     if (response.data.status) {
       yield put(acceptConnectionSuccess({ message: response.data.message, connectionId }));
@@ -43,7 +43,7 @@ function* handleAcceptConnection(action) {
 function* handleRejectConnection(action) {
   try {
     const { connectionId } = action.payload;
-    const response = yield call(api.post, `/connection/reject/${connectionId}`);
+    const response = yield call(api.post, `/connection/receive/rejected/${connectionId}`);
     
     if (response.data.status) {
       yield put(rejectConnectionSuccess({ message: response.data.message, connectionId }));

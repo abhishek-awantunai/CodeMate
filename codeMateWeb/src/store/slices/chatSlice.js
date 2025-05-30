@@ -5,7 +5,7 @@ const chatSlice = createSlice({
   initialState: {
     connections: [],
     selectedConnection: null,
-    messages: {},
+    messages: [],
     loading: false,
     error: null
   },
@@ -32,10 +32,7 @@ const chatSlice = createSlice({
     },
     fetchMessagesSuccess: (state, action) => {
       state.loading = false;
-      state.messages = {
-        ...state.messages,
-        [action.payload.connectionId]: action.payload.messages
-      };
+      state.messages = action.payload;
       state.error = null;
     },
     fetchMessagesFailure: (state, action) => {
@@ -48,11 +45,7 @@ const chatSlice = createSlice({
     },
     sendMessageSuccess: (state, action) => {
       state.loading = false;
-      const { connectionId, message } = action.payload;
-      if (!state.messages[connectionId]) {
-        state.messages[connectionId] = [];
-      }
-      state.messages[connectionId].push(message);
+      state.messages.push(action.payload);
       state.error = null;
     },
     sendMessageFailure: (state, action) => {
