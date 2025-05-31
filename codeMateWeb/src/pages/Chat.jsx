@@ -1,48 +1,27 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from '../components/Header';
 import { fetchConnectionsRequest, selectConnection } from '../store/slices/chatSlice';
 import socket from '../utils/socket';
+import api from '../services/api';
 
 const Chat = () => {
   const dispatch = useDispatch();
   const { connections, selectedConnection, loading, error } = useSelector((state) => state.chat);
   const currentUserId = useSelector((state) => state.auth.user?._id);
   const [message, setMessage] = useState('');
+  const [chatMessage, setChatMessage] = useState([]);
+  const [messagesLoading, setMessagesLoading] = useState(false);
+  const messagesEndRef = useRef(null);
 
-  // Dummy messages for demonstration
-  const dummyMessages = [
-    {
-      _id: '1',
-      senderId: currentUserId,
-      content: 'Hey there! How are you doing?',
-      createdAt: new Date(Date.now() - 3600000).toISOString()
-    },
-    {
-      _id: '2',
-      senderId: selectedConnection?.connectionId?._id || selectedConnection?.userId?._id,
-      content: 'Hi! I\'m doing great, thanks for asking. How about you?',
-      createdAt: new Date(Date.now() - 3500000).toISOString()
-    },
-    {
-      _id: '3',
-      senderId: currentUserId,
-      content: 'I\'m good too! Just working on some exciting projects.',
-      createdAt: new Date(Date.now() - 3400000).toISOString()
-    },
-    {
-      _id: '4',
-      senderId: selectedConnection?.connectionId?._id || selectedConnection?.userId?._id,
-      content: 'That sounds interesting! Would love to hear more about it.',
-      createdAt: new Date(Date.now() - 3300000).toISOString()
-    },
-    {
-      _id: '5',
-      senderId: currentUserId,
-      content: 'Sure! Let\'s catch up sometime this week?',
-      createdAt: new Date(Date.now() - 3200000).toISOString()
-    }
-  ];
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatMessage]);
 
   const fetchConnections = useCallback(() => {
     dispatch(fetchConnectionsRequest());
@@ -60,14 +39,43 @@ const Chat = () => {
   }, [connections, selectedConnection, dispatch]);
 
   useEffect(() => {
-    if (selectedConnection?._id) {
-      socket.emit('joinRoom', {userId: currentUserId, targetUserId: selectedConnection?._id});
+    if (selectedConnection) {
+      const requestUserId = selectedConnection?.userId?._id;
+      const requestConnectionId = selectedConnection?.connectionId?._id;
+      const targetUserId = (currentUserId === requestUserId) ? requestConnectionId : requestUserId;
+
+      // Fetch messages for the selected connection
+      const fetchMessages = async () => {
+        try {
+          setMessagesLoading(true);
+          const response = await api.get(`/chat/messages/${targetUserId}`);
+          setChatMessage(response?.data?.data?.messages ?? []);
+        } catch (error) {
+          console.error('Error fetching messages:', error);
+        } finally {
+          setMessagesLoading(false);
+        }
+      };
+
+      fetchMessages();
+      socket.emit('joinRoom', {userId: currentUserId, targetUserId});
     }
+
+    socket.on("messageReceived", (data) => {
+      setChatMessage((prev) => [...prev, data]);
+    });
 
     return () => {
       socket.off("messageReceived");
     };
   }, [currentUserId, selectedConnection]);
+
+  useEffect(() => {
+    if (selectedConnection) {
+      // fetch messages from the server for the selected connection
+      setChatMessage([]);
+    }
+  }, [selectedConnection]);
 
   const handleSelectConnection = (connection) => {
     dispatch(selectConnection(connection));
@@ -81,13 +89,21 @@ const Chat = () => {
 
   const handleSendMessage = () => {
     if (!message.trim()) return;
-    // TODO: Implement message sending
-    setMessage('');
-    socket.emit('sendMessage', {
-      userId: currentUserId,
-      targetUserId: selectedConnection?._id,
-      message: message
-    });
+      setMessage('');
+      const requestUserId = selectedConnection?.userId?._id;
+      const requestConnectionId = selectedConnection?.connectionId?._id;
+      const targetUserId = (currentUserId === requestUserId) ? requestConnectionId : requestUserId;
+
+      const dataToBeSent = {
+        _id: new Date().getTime(),
+        senderId: currentUserId,
+        userId: currentUserId,
+        targetUserId,
+        text: message,
+        createdAt: new Date(Date.now() - 3600000).toISOString()
+      };
+
+      socket.emit('sendMessage', dataToBeSent);
   };
 
   if (loading) {
@@ -189,7 +205,7 @@ const Chat = () => {
                     key={connection._id}
                     onClick={() => handleSelectConnection(connection)}
                     className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                      selectedConnection?._id === connection._id ? 'bg-gray-50' : ''
+                      selectedConnection?.connectionId?._id === connection._id ? 'bg-gray-50' : ''
                     }`}
                   >
                     <div className="flex items-center space-x-4">
@@ -250,30 +266,41 @@ const Chat = () => {
                   </div>
                 </div>
                 <div className="flex-1 p-4 overflow-y-auto">
-                  <div className="space-y-4">
-                    {dummyMessages.map((msg) => {
-                      const isOwnMessage = msg.senderId === currentUserId;
-                      return (
-                        <div
-                          key={msg._id}
-                          className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
-                        >
+                  {messagesLoading ? (
+                    <div className="flex justify-center items-center h-full">
+                      <div className="loading loading-spinner loading-lg text-pink-500"></div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {chatMessage.length > 0 ? chatMessage.map((msg) => {
+                        const isOwnMessage = msg.senderId === currentUserId;
+                        return (
                           <div
-                            className={`max-w-[70%] rounded-2xl px-4 py-2 ${
-                              isOwnMessage
-                                ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white'
-                                : 'bg-gray-100 text-gray-900'
-                            }`}
+                            key={msg._id}
+                            className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
                           >
-                            <p className="text-sm">{msg.content}</p>
-                            <p className={`text-xs mt-1 ${isOwnMessage ? 'text-pink-100' : 'text-gray-500'}`}>
-                              {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </p>
+                            <div
+                              className={`max-w-[70%] rounded-2xl px-4 py-2 ${
+                                isOwnMessage
+                                  ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white'
+                                  : 'bg-gray-100 text-gray-900'
+                              }`}
+                            >
+                              <p className="text-sm">{msg.text}</p>
+                              <p className={`text-xs mt-1 ${isOwnMessage ? 'text-pink-100' : 'text-gray-500'}`}>
+                                {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
                           </div>
+                        );
+                      }) : (
+                        <div className="flex justify-center items-center h-full">
+                          <p className="text-gray-500">No messages yet</p>
                         </div>
-                      );
-                    })}
-                  </div>
+                      )}
+                      <div ref={messagesEndRef} />
+                    </div>
+                  )}
                 </div>
                 <div className="p-4 border-t">
                   <div className="flex space-x-4">

@@ -10,6 +10,8 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('./src/routers/auth');
 const profileRouter = require('./src/routers/profile');
 const connectionRouter = require('./src/routers/connection');
+const chatRouter = require("./src/routers/chat");
+
 const { initializeSocket } = require("./socket");
 
 const app = express();
@@ -29,6 +31,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/auth', authRouter);
+app.use('/chat', chatRouter);
 app.use('/profile', profileRouter);
 app.use('/connection', connectionRouter);
 

@@ -1,4 +1,11 @@
 const { Server } = require('socket.io');
+const crypto = require('crypto');
+const Chat = require('./src/models/Chat');
+
+const getSecretRoomId = (userId, targetUserId) => {
+    const id = [userId, targetUserId].sort().join('_');
+    return  crypto.createHash('sha256').update(id).digest('hex');
+}
 
 const initializeSocket = (server) => {
     const io = new Server(server, {
@@ -10,16 +17,44 @@ const initializeSocket = (server) => {
 
     io.on('connection', (socket) => {
         socket.on('joinRoom', ({ userId, targetUserId }) => {
-            const roomId = [userId, targetUserId].sort().join('_');
+            const roomId = getSecretRoomId(userId, targetUserId);
+            console.log(`Users joined room ${roomId}`)
             socket.join(roomId);
-            console.log(`${userId} and ${targetUserId} joined room ${roomId}`);
         });
 
-        socket.on('sendMessage', ({ userId, targetUserId, message }) => {
-            const roomId = [userId, targetUserId].sort().join('_');
+        socket.on('sendMessage', async ({ userId, targetUserId, text }) => {
+            const roomId = getSecretRoomId(userId, targetUserId);
+
+            try {
+                let chat = await Chat.findOne({
+                    participants: {
+                        $all: [userId, targetUserId]
+                    }
+                })
+
+                if (!chat) {
+                    chat = new Chat({
+                        participants: [userId, targetUserId],
+                        messages: []
+                    })
+                }
+
+                chat.messages.push({
+                    senderId: userId,
+                    text
+                });
+
+                await chat.save();
+            } catch (error) {
+                console.log(error);
+            }
+
             io.to(roomId).emit('messageReceived', {
-                from: userId,
-                message,
+                _id: new Date().getTime(),
+                senderId: userId,
+                targetUserId,
+                text,
+                createdAt: new Date(Date.now() - 3600000).toISOString()
             });
         });
 
