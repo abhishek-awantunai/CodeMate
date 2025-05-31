@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/abhishek-awantunai/CodeMate/issues"
   },
-  "homepage": "https://github.com/abhishek-awantunai/CodeMate#readme"
+  "homepage": "https://github.com/abhishek-awantunai/CodeMate#readme",
+  "dependencies": {
+    "react-icons": "^5.5.0"
+  }
 }
