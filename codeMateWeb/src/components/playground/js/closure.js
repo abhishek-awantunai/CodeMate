@@ -117,6 +117,49 @@ function demo3() {
     }
 }
 
-demo1();
+// demo1();
 // demo2();
 // demo3();
+
+
+/*
+    Here in below example since we know a function forms closure with its outer environment hence innerFn will form closure with both variable a and b 
+*/
+
+function outerFn(b) {
+    let a = 10;
+    function innerFn(){
+        console.log(a, b);
+    }
+    return innerFn;
+}
+
+// outerFn('apple')();
+
+/*
+    In this closure example as we can see that we can keep our variables private and encapsulated
+*/
+
+function Counter() {
+    let count = 0;
+    this.incrementCounter = () => {
+        count++;
+        console.log(count);
+    }
+    this.decrementCounter = () => {
+        count--;
+        console.log(count);
+    }
+}
+
+const counter1 = new Counter();
+const counter2 = new Counter();
+counter1.incrementCounter();
+counter1.incrementCounter();
+counter1.incrementCounter();
+counter1.decrementCounter();
+counter1.incrementCounter();
+console.log('--------------')
+counter2.incrementCounter();
+counter2.incrementCounter();
+counter2.decrementCounter();
