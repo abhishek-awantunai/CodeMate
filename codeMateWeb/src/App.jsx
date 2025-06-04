@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import Chat from './pages/Chat';
 import Connections from './pages/Connections';
+import Playground from './pages/Playground';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/help" element={<Help />} />
         <Route path="/connections" element={<Connections />} />
+        <Route path="/playground" element={<Playground />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Provider>
