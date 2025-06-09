@@ -12,15 +12,31 @@
     <script>
     console.clear();
 
-    var fruit = 'apple';
-    let name = 'Abhoshe'
+    // var fruit = 'apple';
+    // let name = 'Abhishek'
 
-    function demo(params) {
-        var a = 234;
-        let assd = 22;
+    // function demo(params) {
+    //     var a = 234;
+    //     let assd = 22;
+    // }
+
+    // demo();
+
+    // local this is created for each function whenever its execution context is created
+    function Counter() {
+        let count = 0;
+        this.getCount = function() {
+            return count;
+        };
+        this.up = function() {
+            return ++count;
+        };
+        this.down = function() {
+            return --count;
+        };
     }
 
-    demo();
+    // console.log(Counter())
     </script>
   </body>
 </html>

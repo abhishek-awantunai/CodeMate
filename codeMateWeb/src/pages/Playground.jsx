@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import '../components/playground/js/closure'
+import '../components/playground/js/constructor'
+// import '../components/playground/js/polyfill'
+// import '../components/playground/js/closure'
 // import '../components/playground/js/hoist'
 // import '../components/playground/js/this'
 // import '../components/playground/js/promise'
 // import '../components/playground/js/asyncAwait'
+
 
 const Stopwatch = () => {
     const [time, setTime] = useState(0);
