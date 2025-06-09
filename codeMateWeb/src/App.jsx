@@ -13,6 +13,7 @@ import Chat from './pages/Chat';
 import Connections from './pages/Connections';
 import Playground from './pages/Playground';
 import Memo from './pages/Memo';
+import Resume from './pages/Resume';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/connections" element={<Connections />} />
         <Route path="/playground" element={<Playground />} />
         <Route path="/memo" element={<Memo />} />
+        <Route path="/resume" element={<Resume />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Provider>
