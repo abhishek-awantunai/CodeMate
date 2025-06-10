@@ -81,7 +81,7 @@ const Resume = () => {
     const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
     const [atsScore, setAtsScore] = useState(0)
     const [atsFeedback, setAtsFeedback] = useState([])
-    
+
     // ATS scoring criteria
     const atsCriteria = {
         keywords: {
@@ -98,19 +98,19 @@ const Resume = () => {
         const content = resumeData;
 
         // Check for technical keywords
-        const technicalKeywordsFound = atsCriteria.keywords.technical.filter(keyword => 
-            Object.values(content.skills).some(skill => 
+        const technicalKeywordsFound = atsCriteria.keywords.technical.filter(keyword =>
+            Object.values(content.skills).some(skill =>
                 skill.toLowerCase().includes(keyword.toLowerCase())
             ) ||
-            content.experiences.some(exp => 
+            content.experiences.some(exp =>
                 exp.technologies.toLowerCase().includes(keyword.toLowerCase()) ||
-                exp.achievements.some(achievement => 
+                exp.achievements.some(achievement =>
                     achievement.toLowerCase().includes(keyword.toLowerCase())
                 )
             ) ||
-            content.education.some(edu => 
+            content.education.some(edu =>
                 edu.coursework.toLowerCase().includes(keyword.toLowerCase()) ||
-                edu.projects.some(project => 
+                edu.projects.some(project =>
                     project.technologies.toLowerCase().includes(keyword.toLowerCase()) ||
                     project.description.toLowerCase().includes(keyword.toLowerCase())
                 )
@@ -134,12 +134,12 @@ const Resume = () => {
         // Calculate scores
         const technicalScore = (technicalKeywordsFound.length / atsCriteria.keywords.technical.length) * 40;
         const softScore = (softKeywordsFound.length / atsCriteria.keywords.soft.length) * 20;
-        
+
         // Experience section score
         const experienceScore = content.experiences.length >= 2 ? 20 : content.experiences.length * 10;
-        
+
         // Skills section score
-        const skillsScore = Object.values(content.skills).reduce((count, skillSet) => 
+        const skillsScore = Object.values(content.skills).reduce((count, skillSet) =>
             count + skillSet.split(',').length, 0) > 5 ? 20 : 10;
 
         // Calculate total score
@@ -155,7 +155,7 @@ const Resume = () => {
         if (content.experiences.length < 2) {
             feedback.push("Add more work experience entries");
         }
-        if (Object.values(content.skills).reduce((count, skillSet) => 
+        if (Object.values(content.skills).reduce((count, skillSet) =>
             count + skillSet.split(',').length, 0) <= 5) {
             feedback.push("Expand your skills section with more technologies");
         }
@@ -289,18 +289,18 @@ const Resume = () => {
 
     const downloadPDF = async () => {
         if (isGeneratingPDF) return;
-        
+
         try {
             setIsGeneratingPDF(true);
             const content = contentRef.current;
-            
+
             if (!content) {
                 throw new Error('Content element not found');
             }
 
             // Create a clone of the content to modify styles
             const clonedContent = content.cloneNode(true);
-            
+
             // Convert oklch colors to rgb
             const styleSheets = document.styleSheets;
             let cssText = '';
@@ -318,7 +318,7 @@ const Resume = () => {
             // Create a temporary container
             const tempContainer = document.createElement('div');
             tempContainer.appendChild(clonedContent);
-            
+
             // Add a style tag with converted colors
             const styleTag = document.createElement('style');
             styleTag.textContent = cssText.replace(/oklch\([^)]+\)/g, '#000000');
@@ -328,15 +328,15 @@ const Resume = () => {
                 margin: [0.5, 0.5],
                 filename: `${resumeData.name.replace(/\s+/g, '_')}_Resume.pdf`,
                 image: { type: 'jpeg', quality: 1 },
-                html2canvas: { 
+                html2canvas: {
                     scale: 2,
                     useCORS: true,
                     logging: true,
                     backgroundColor: '#ffffff'
                 },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'a4', 
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
                     orientation: 'portrait'
                 }
             };
@@ -359,7 +359,7 @@ const Resume = () => {
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="card-title">Resume Builder</h2>
                             <button
-                                className="btn btn-ghost btn-circle text-primary text-2xl hover:bg-base-200"
+                                className="btn  btn-circle text-primary text-2xl hover:bg-base-200"
                                 onClick={downloadPDF}
                                 disabled={isGeneratingPDF}
                                 title="Download PDF"
@@ -379,8 +379,8 @@ const Resume = () => {
                                 <div className="text-2xl font-bold text-primary">{atsScore}%</div>
                             </div>
                             <div className="w-full bg-base-300 rounded-full h-2.5">
-                                <div 
-                                    className="bg-primary h-2.5 rounded-full transition-all duration-500" 
+                                <div
+                                    className="bg-primary h-2.5 rounded-full transition-all duration-500"
                                     style={{ width: `${atsScore}%` }}
                                 ></div>
                             </div>
@@ -437,7 +437,7 @@ const Resume = () => {
                                 onChange={handleInputChange}
                                 className="input input-bordered"
                             />
-                            
+
                             <div className="divider">Skills</div>
                             <textarea
                                 placeholder="Frontend Skills"
@@ -488,15 +488,15 @@ const Resume = () => {
                                 onChange={(e) => handleSkillChange('other', e.target.value)}
                                 className="textarea textarea-bordered h-24"
                             />
-                            
+
                             <div className="divider">Work Experience</div>
-                            
+
                             {resumeData.experiences.map((exp, index) => (
                                 <div key={index} className="card bg-base-200 p-4">
                                     <div className="flex justify-between items-center mb-2">
                                         <h3 className="font-bold">Experience {index + 1}</h3>
-                                        <button 
-                                            className="btn btn-square btn-sm btn-error" 
+                                        <button
+                                            className="btn btn-square btn-sm btn-error"
                                             onClick={() => removeExperience(index)}
                                         >
                                             ✕
@@ -538,22 +538,22 @@ const Resume = () => {
                                     />
                                 </div>
                             ))}
-                            
-                            <button 
-                                className="btn btn-secondary" 
+
+                            <button
+                                className="btn btn-secondary"
                                 onClick={addExperience}
                             >
                                 Add Experience
                             </button>
 
                             <div className="divider">Education</div>
-                            
+
                             {resumeData.education.map((edu, eduIndex) => (
                                 <div key={eduIndex} className="card bg-base-200 p-4">
                                     <div className="flex justify-between items-center mb-2">
                                         <h3 className="font-bold">Education {eduIndex + 1}</h3>
-                                        <button 
-                                            className="btn btn-square btn-sm btn-error" 
+                                        <button
+                                            className="btn btn-square btn-sm btn-error"
                                             onClick={() => removeEducation(eduIndex)}
                                         >
                                             ✕
@@ -593,24 +593,24 @@ const Resume = () => {
                                         onChange={(e) => handleEducationChange(eduIndex, 'coursework', e.target.value)}
                                         className="textarea textarea-bordered mb-4"
                                     />
-                                    
+
                                     <div className="mb-2">
                                         <div className="flex justify-between items-center mb-2">
                                             <h4 className="font-semibold">Projects</h4>
-                                            <button 
-                                                className="btn btn-xs btn-primary" 
+                                            <button
+                                                className="btn btn-xs btn-primary"
                                                 onClick={() => addProject(eduIndex)}
                                             >
                                                 Add Project
                                             </button>
                                         </div>
-                                        
+
                                         {edu.projects.map((project, projectIndex) => (
                                             <div key={projectIndex} className="card bg-base-300 p-3 mb-2">
                                                 <div className="flex justify-between items-center mb-2">
                                                     <h5 className="font-medium">Project {projectIndex + 1}</h5>
-                                                    <button 
-                                                        className="btn btn-xs btn-circle btn-error" 
+                                                    <button
+                                                        className="btn btn-xs btn-circle btn-error"
                                                         onClick={() => removeProject(eduIndex, projectIndex)}
                                                     >
                                                         ✕
@@ -642,9 +642,9 @@ const Resume = () => {
                                     </div>
                                 </div>
                             ))}
-                            
-                            <button 
-                                className="btn btn-secondary" 
+
+                            <button
+                                className="btn btn-secondary"
                                 onClick={addEducation}
                             >
                                 Add Education
@@ -661,27 +661,48 @@ const Resume = () => {
                         {/* Header */}
                         <div className="text-center mb-8">
                             <h1 className="text-4xl font-bold mb-4">{resumeData.name}</h1>
+
+                            {/* Email & Phone */}
                             <div className="flex justify-center items-center gap-6 text-sm">
-                                <a href={`mailto:${resumeData.email}`} className="link link-hover flex items-center gap-2 hover:text-primary transition-colors">
-                                    <i className="fas fa-envelope text-lg"></i>
+                                <a
+                                    href={`mailto:${resumeData.email}`}
+                                    className="link link-hover flex items-center gap-2 hover:text-primary transition-colors"
+                                >
+                                    <i className="fa-solid fa-envelope text-base"></i>
                                     <span>{resumeData.email}</span>
                                 </a>
-                                <a href={`tel:${resumeData.phone}`} className="link link-hover flex items-center gap-2 hover:text-primary transition-colors">
-                                    <i className="fas fa-phone text-lg"></i>
+                                <a
+                                    href={`tel:${resumeData.phone}`}
+                                    className="link link-hover flex items-center gap-2 hover:text-primary transition-colors"
+                                >
+                                    <i className="fa-solid fa-phone text-base"></i>
                                     <span>{resumeData.phone}</span>
                                 </a>
                             </div>
+
+                            {/* GitHub & LinkedIn */}
                             <div className="flex justify-center items-center gap-6 text-sm mt-3">
-                                <a href={`https://${resumeData.github}`} target="_blank" rel="noopener noreferrer" className="link link-hover flex items-center gap-2 hover:text-primary transition-colors">
-                                    <i className="fab fa-github text-xl"></i>
+                                <a
+                                    href={`https://${resumeData.github}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="link link-hover flex items-center gap-2 hover:text-primary transition-colors"
+                                >
+                                    <i className="fa-brands fa-github text-xl"></i>
                                     <span>{resumeData.github}</span>
                                 </a>
-                                <a href={`https://${resumeData.linkedin}`} target="_blank" rel="noopener noreferrer" className="link link-hover flex items-center gap-2 hover:text-primary transition-colors">
-                                    <i className="fab fa-linkedin text-xl"></i>
+                                <a
+                                    href={`https://${resumeData.linkedin}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="link link-hover flex items-center gap-2 hover:text-primary transition-colors"
+                                >
+                                    <i className="fa-brands fa-linkedin text-xl"></i>
                                     <span>{resumeData.linkedin}</span>
                                 </a>
                             </div>
                         </div>
+
 
                         {/* Skills Section */}
                         <div className="mb-6">
