@@ -48,7 +48,7 @@ const Resume = () => {
                     "Enhanced user experience and reduced support queries by over 25% through the successful rollout of a SKU-based product search feature.",
                     "Delivered scalable, pixel-perfect web solutions under aggressive timelines through seamless cross-functional collaboration with design, QA, and product teams."
                 ],
-                technologies: 'Java, Python, TypeScript, AWS Step Functions, AWS Batch, Lambda, S3, DynamoDB, EC2, SQS, SNS, AWS CDK, AWS Athena, Elastic Search, LightGBM, TensorFlow'
+                technologies: 'React, Redux, Node, Express, MongoDB, AWS, Git, Angular, Html, css, Javascript, Typescript, Jira, Docker'
             },
             {
                 company: 'Value First, Gurugram',
@@ -64,7 +64,7 @@ const Resume = () => {
                     "Accelerating initial bundle load by 60% through the implementation of comprehensive lazy loading for all modules.",
                     "Further enhancing speed by applying Brotli compression to shrink payloads and improve overall load times."
                 ],
-                technologies: 'Python, Flask, ReactJS, Redux, Angular, d3, Kafka, DB2, scikit-learn'
+                technologies: 'Angular, Html, css, Javascript, Typescript, React, Redux, Node, Express, MongoDB, AWS, Git, Jira'
             },
             {
                 company: 'Moglix, Noida',
@@ -77,17 +77,17 @@ const Resume = () => {
                     "Built and managed critical e-commerce features and product workflows on the PrestaShop platform, directly supporting key business operations and marketing campaigns.",
                     "Collaborated seamlessly across design, QA, and content teams to deliver high-impact web solutions consistently under aggressive deadlines."
                 ],
-                technologies: 'Angular, Php, Javascript, JQuery, Prestashop, Wordpress, Gulp, Webpack, Html/Pug, Css/Scss, Git, Jira'
+                technologies: 'Angular, Php, Javascript, JQuery, Prestashop, Wordpress, Gulp, Webpack, Html/Pug, Css/Scss, Bootstrap, Angular Material, Git, Jira'
             },
             {
                 company: 'Code Brew Labs',
                 title: 'Software Developer Intern',
                 period: 'Jan 2016 - Oct 2016',
                 achievements: [
-                    'Worked on migrating ML workflows to Native AWS, enabling automated scalability based on workload demands and improving the logging and troubleshooting capabilities.',
-                    'Developed a customized batch workflow plugin for an external team to help them save upto $6MM in human labelling cost for their ML experiments. This was achieved by auto labelling high confidence records using our ML models.'
+                    "Developed and optimized 'Plan My Medical Trip' and 'Clikat' websites, significantly enhancing the digital presence and service offerings for a leading travel agency.",
+                    "Elevated proficiency across core front-end technologies, including Angular JS, JavaScript, jQuery, HTML, CSS, and Bootstrap."
                 ],
-                technologies: 'JQuery, Javascript, Filezila, AngularJS, Html/Pug, Css/Scss, Git, Jira'
+                technologies: 'JQuery, Javascript, Filezila, AngularJS, HTML/Pug, Css / Scss, Bootstrap, Git, Jira'
             },
         ],
         education: [
