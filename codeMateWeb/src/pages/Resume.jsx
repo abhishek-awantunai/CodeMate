@@ -56,6 +56,7 @@ const Resume = () => {
                 institution: 'MMU, Ambala, Haryana',
                 degree: 'B.Tech in Computer Science and Engineering',
                 period: 'Aug 2012 - Jun 2016',
+                percentage: '7.86 CGPA',
                 coursework: '',
                 projects: []
             },
@@ -63,6 +64,7 @@ const Resume = () => {
                 institution: 'Eklavya Educational Complex',
                 degree: 'Xth',
                 period: 'May 2011 - May 2012',
+                percentage: '67%',
                 coursework: '',
                 projects: []
             },
@@ -70,6 +72,7 @@ const Resume = () => {
                 institution: 'Sunshine Preph / High School',
                 degree: 'Xth',
                 period: 'Apr 2008 - Mar 2009',
+                percentage: '82%',
                 coursework: '',
                 projects: []
             },
@@ -247,6 +250,7 @@ const Resume = () => {
                 institution: '',
                 degree: '',
                 period: '',
+                percentage: '',
                 coursework: '',
                 projects: []
             }]
@@ -576,6 +580,13 @@ const Resume = () => {
                                         onChange={(e) => handleEducationChange(eduIndex, 'period', e.target.value)}
                                         className="input input-bordered mb-2"
                                     />
+                                    <input
+                                        type="text"
+                                        placeholder="Percentage (e.g., 85%)"
+                                        value={edu.percentage}
+                                        onChange={(e) => handleEducationChange(eduIndex, 'percentage', e.target.value)}
+                                        className="input input-bordered mb-2"
+                                    />
                                     <textarea
                                         placeholder="Relevant Coursework"
                                         value={edu.coursework}
@@ -736,6 +747,7 @@ const Resume = () => {
                                             <div>
                                                 <span className="font-bold">{edu.institution}</span><br />
                                                 <span className="text-blue-700 font-semibold">{edu.degree}</span>
+                                                {edu.percentage && <span className="ml-2">({edu.percentage})</span>}
                                             </div>
                                             <div className="italic">{edu.period}</div>
                                         </div>
