@@ -20,20 +20,17 @@ const Resume = () => {
         },
         experiences: [
             {
-                company: 'Adobe, Bangalore',
-                title: 'Computer Scientist',
-                period: 'Mar 2021 - Present',
+                company: 'Awantunai, Indonesia',
+                title: 'Senior SDE2',
+                period: 'July 2022 - Present',
                 achievements: [
-                    'Led the migration of Hive and Presto jobs from Qubole to AWS EMR, enhancing availability and significantly reducing operational costs.',
-                    'Reduced the cost involved in running custom reports service by more than 80% by devising an automated system that identified and disabled reports with no usage or empty data.',
-                    'Led a cost-saving initiative by identifying unused AWS resources and establishing S3 bucket expiration policies, leading to an annual cost reduction exceeding $50,000 in AWS expenditures.',
                 ],
                 technologies: 'AWS, EC2, S3, EMR, Hive, Presto, Qubole, Kafka, Druid, Zookeeper, MySQL, Kubernetes, Docker, Bazel'
             },
             {
-                company: 'Amazon, Bangalore',
-                title: 'Software Development Engineer',
-                period: 'Sept 2019 - Mar 2021',
+                company: 'Moglix, Noida',
+                title: 'Senior Lead Engineer',
+                period: 'Feb 2021 - June 2022',
                 achievements: [
                     'Worked on migrating ML workflows to Native AWS, enabling automated scalability based on workload demands and improving the logging and troubleshooting capabilities.',
                     'Developed a customized batch workflow plugin for an external team to help them save upto $6MM in human labelling cost for their ML experiments. This was achieved by auto labelling high confidence records using our ML models.'
@@ -41,15 +38,35 @@ const Resume = () => {
                 technologies: 'Java, Python, TypeScript, AWS Step Functions, AWS Batch, Lambda, S3, DynamoDB, EC2, SQS, SNS, AWS CDK, AWS Athena, Elastic Search, LightGBM, TensorFlow'
             },
             {
-                company: 'Morgan Stanley, Bangalore',
-                title: 'Technology Associate',
-                period: 'Aug 2017 - Aug 2019',
+                company: 'Value First, Gurugram',
+                title: 'Senior Software Engineer',
+                period: 'Sept 2019 - Feb 2021',
                 achievements: [
                     'Built a visualization tool to group contextually related infrastructure alerts (issues) to reduce the Mean Time to Resolution. Modeled the infrastructure dependencies as a graph problem and used graph algorithms like BFS, Union-Find to show the visualization and identify the root cause for a bunch of alerts.',
                     'Developed a Machine Learning powered solution to predict the likelihood of a production deployment resulting in an emergency reversion.'
                 ],
                 technologies: 'Python, Flask, ReactJS, Redux, Angular, d3, Kafka, DB2, scikit-learn'
-            }
+            },
+            {
+                company: 'Moglix, Noida',
+                title: 'Software Engineer',
+                period: 'Dec 2016 - Sept 2019',
+                achievements: [
+                    'Worked on migrating ML workflows to Native AWS, enabling automated scalability based on workload demands and improving the logging and troubleshooting capabilities.',
+                    'Developed a customized batch workflow plugin for an external team to help them save upto $6MM in human labelling cost for their ML experiments. This was achieved by auto labelling high confidence records using our ML models.'
+                ],
+                technologies: 'Angular, Php, Javascript, JQuery, Prestashop, Wordpress, Gulp, Webpack, Html/Pug, Css/Scss, Git, Jira'
+            },
+            {
+                company: 'Code Brew Labs',
+                title: 'Software Developer Intern',
+                period: 'Jan 2016 - Oct 2016',
+                achievements: [
+                    'Worked on migrating ML workflows to Native AWS, enabling automated scalability based on workload demands and improving the logging and troubleshooting capabilities.',
+                    'Developed a customized batch workflow plugin for an external team to help them save upto $6MM in human labelling cost for their ML experiments. This was achieved by auto labelling high confidence records using our ML models.'
+                ],
+                technologies: 'JQuery, Javascript, Filezila, AngularJS, Html/Pug, Css/Scss, Git, Jira'
+            },
         ],
         education: [
             {
@@ -63,7 +80,7 @@ const Resume = () => {
             {
                 institution: 'Eklavya Educational Complex',
                 degree: 'Xth',
-                period: 'May 2011 - May 2012',
+                period: 'Apr 2010 - May 2011',
                 percentage: '67%',
                 coursework: '',
                 projects: []
