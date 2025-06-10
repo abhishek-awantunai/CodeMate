@@ -24,16 +24,29 @@ const Resume = () => {
                 title: 'Senior SDE2',
                 period: 'July 2022 - Present',
                 achievements: [
+                    "Implemented an auto-update mechanism to ensure users always run the latest version of the app without manual intervention.",
+                    "Engineered a mouseless navigation experience, optimizing user workflows for keyboard-first efficiency and faster task completion.",
+                    "Reduced initial load time by lazily loading modules, components, and assets, significantly improving page performance and time-to-interactive.",
+                    "Designed and developed Awan UI, a scalable and customizable component library built with Tailwind CSS, accelerating UI development across projects.",
+                    "Successfully converted a web application into a desktop app using Electron, enabling offline capability and cross-platform distribution.",
+                    "Migrated the web application to a Progressive Web App (PWA) using Workbox, adding offline support, background sync, and installability.",
+                    "Integrated a robust API retry mechanism to gracefully handle network disruptions and ensure reliable data transactions.",
+                    "Developed a SKU search, transaction, and receipt sync system that operates fully offline and syncs automatically when connectivity is restored.",
                 ],
-                technologies: 'AWS, EC2, S3, EMR, Hive, Presto, Qubole, Kafka, Druid, Zookeeper, MySQL, Kubernetes, Docker, Bazel'
+                technologies: 'Electron, React, Redux, Data Dog, Mixpanel, Telemetry, Mui, Chakra UI, Tailwind, Daisy UI'
             },
             {
                 company: 'Moglix, Noida',
                 title: 'Senior Lead Engineer',
                 period: 'Feb 2021 - June 2022',
                 achievements: [
-                    'Worked on migrating ML workflows to Native AWS, enabling automated scalability based on workload demands and improving the logging and troubleshooting capabilities.',
-                    'Developed a customized batch workflow plugin for an external team to help them save upto $6MM in human labelling cost for their ML experiments. This was achieved by auto labelling high confidence records using our ML models.'
+                    "Boosted initial page load time by 30% through strategic implementation of lazy loading across images, modules, and components, significantly enhancing user experience.",
+                    "Streamlined payment processing by seamlessly integrating Razorpay, ensuring secure and efficient transactions.",
+                    "Expanded payment flexibility by integrating Cashfree and Decentro, offering diverse and reliable payment gateways.",
+                    "Optimized product discovery by engineering high-performance filtering, sorting, and search algorithms, dramatically improving catalog navigation speed.",
+                    "Elevated web performance by conducting in-depth Google Lighthouse audits and implementing key optimizations that significantly improved Core Web Vitals and page load times.",
+                    "Enhanced user experience and reduced support queries by over 25% through the successful rollout of a SKU-based product search feature.",
+                    "Delivered scalable, pixel-perfect web solutions under aggressive timelines through seamless cross-functional collaboration with design, QA, and product teams."
                 ],
                 technologies: 'Java, Python, TypeScript, AWS Step Functions, AWS Batch, Lambda, S3, DynamoDB, EC2, SQS, SNS, AWS CDK, AWS Athena, Elastic Search, LightGBM, TensorFlow'
             },
@@ -42,8 +55,14 @@ const Resume = () => {
                 title: 'Senior Software Engineer',
                 period: 'Sept 2019 - Feb 2021',
                 achievements: [
-                    'Built a visualization tool to group contextually related infrastructure alerts (issues) to reduce the Mean Time to Resolution. Modeled the infrastructure dependencies as a graph problem and used graph algorithms like BFS, Union-Find to show the visualization and identify the root cause for a bunch of alerts.',
-                    'Developed a Machine Learning powered solution to predict the likelihood of a production deployment resulting in an emergency reversion.'
+                    "Spearheaded the R&D and enhancement of an internal bot builder platform, integrating a custom-modified JS pump module that dramatically boosted bot development efficiency by 40%.",
+                    "Orchestrated a seamless migration of a legacy PHP Laravel application to Angular, modernizing the user interface and significantly enhancing maintainability.",
+                    "Engineered and published a custom NPM package for User Management, establishing centralized, reusable access control across diverse projects.",
+                    "Dramatically optimized front-end performance through a multi-faceted approach, achieving significant improvements in load times and resource utilization by:",
+                    "Reducing asset bloat through the replacement of image-based icons with efficient SVG icon fonts (e.g., via IcoMoon).",
+                    "Minimizing payload size via the elimination of unused sprite sheets and comprehensive media asset optimization.",
+                    "Accelerating initial bundle load by 60% through the implementation of comprehensive lazy loading for all modules.",
+                    "Further enhancing speed by applying Brotli compression to shrink payloads and improve overall load times."
                 ],
                 technologies: 'Python, Flask, ReactJS, Redux, Angular, d3, Kafka, DB2, scikit-learn'
             },
@@ -52,8 +71,11 @@ const Resume = () => {
                 title: 'Software Engineer',
                 period: 'Dec 2016 - Sept 2019',
                 achievements: [
-                    'Worked on migrating ML workflows to Native AWS, enabling automated scalability based on workload demands and improving the logging and troubleshooting capabilities.',
-                    'Developed a customized batch workflow plugin for an external team to help them save upto $6MM in human labelling cost for their ML experiments. This was achieved by auto labelling high confidence records using our ML models.'
+                    "Developed and maintained enterprise websites using PHP CMS, significantly enhancing backend performance and reliability.",
+                    "Designed and launched the Green GST informational platform on WordPress, optimizing it for superior SEO performance and full responsiveness.",
+                    "Led the strategic migration of a legacy CMS-based web application to Angular, resulting in vastly improved UI/UX and long-term maintainability.",
+                    "Built and managed critical e-commerce features and product workflows on the PrestaShop platform, directly supporting key business operations and marketing campaigns.",
+                    "Collaborated seamlessly across design, QA, and content teams to deliver high-impact web solutions consistently under aggressive deadlines."
                 ],
                 technologies: 'Angular, Php, Javascript, JQuery, Prestashop, Wordpress, Gulp, Webpack, Html/Pug, Css/Scss, Git, Jira'
             },
