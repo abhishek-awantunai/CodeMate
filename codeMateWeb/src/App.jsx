@@ -14,6 +14,8 @@ import Connections from './pages/Connections';
 import Playground from './pages/Playground';
 import Memo from './pages/Memo';
 import Resume from './pages/Resume';
+import Algo from './pages/Algo';
+import Akshay from './pages/Akshay';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/help" element={<Help />} />
+        <Route path="/algo" element={<Algo />} />
+        <Route path="/askhay" element={<Akshay />} />
         <Route path="/connections" element={<Connections />} />
         <Route path="/playground" element={<Playground />} />
         <Route path="/memo" element={<Memo />} />

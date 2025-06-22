@@ -1,0 +1,5 @@
+/*
+
+  A Higher Order Function is a function that takes one or more function as argument.
+
+*/

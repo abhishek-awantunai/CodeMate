@@ -1,0 +1,7 @@
+/*
+
+Pure pipes are called when angular witnesses any change in value or when any parameters passed to pipe.
+
+Impure pipes are called for every change detection cycle of components regardless of the value or  parameter changes and eventually you can make pipes to be impure by setting pure flag to false
+
+*/

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import '../components/playground/js/constructor'
+// import '../components/playground/js/constructor'
 // import '../components/playground/js/polyfill'
 // import '../components/playground/js/closure'
 // import '../components/playground/js/hoist'

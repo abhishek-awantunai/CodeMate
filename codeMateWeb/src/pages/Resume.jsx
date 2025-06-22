@@ -7,16 +7,16 @@ const Resume = () => {
         name: 'Abhishek Kumar',
         email: 'abhishek.kumar2526@gmail.com',
         phone: '+91 9891154187',
-        github: 'github.com/MERN-MECHANIC',
+        github: 'github.com/mern-mechanic',
         linkedin: 'linkedin.com/in/abhishek-kumar-a2a98674/',
         skills: {
-            frontend: 'React.js, Redux, Next.js, JavaScript (ES6+), HTML5, CSS3, Tailwind CSS, Bootstrap',
-            backend: 'Node.js, Express.js, REST APIs, JWT, Passport.js',
-            database: 'MongoDB, Mongoose, Firebase',
-            devops: 'Git, GitHub, Docker, Postman, Webpack, Vite, Jenkins',
-            testing: 'Jest, React Testing Library, Mocha, Chai',
-            cloud: 'AWS (EC2, S3), Heroku, Vercel, Netlify',
-            other: 'Agile/Scrum, Jira, Bitbucket, CI/CD pipelines'
+            frontend: 'React.js, React Native, Next.js, Redux, JavaScript (ES6+), JQuery, HTML5/Pug, CSS3/SCSS, Tailwind, Bootstrap,  Mui, Chakra UI, Daisy UI',
+            backend: 'Node.js, Express.js, REST APIs, GraphQl',
+            database: 'MongoDB, Mongoose, Firebase, MySQL, Redis, Index DB, CouchDB, PouchDB',
+            devops: 'Amplify, Git, GitHub, Docker, Postman, Webpack, Vite, Parcel',
+            testing: 'Jest, React Testing Library',
+            cloud: 'AWS (EC2, S3), Cloudflare, Netlify, Vercel, Heroku, Fastly, Varnish',
+            other: 'Mixpanel, Telemetry, Data Dog, Agile/Scrum, Jira, Bitbucket, CI/CD pipelines'
         },
         experiences: [
             {
@@ -33,7 +33,7 @@ const Resume = () => {
                     "Integrated a robust API retry mechanism to gracefully handle network disruptions and ensure reliable data transactions.",
                     "Developed a SKU search, transaction, and receipt sync system that operates fully offline and syncs automatically when connectivity is restored.",
                 ],
-                technologies: 'Electron, React, Redux, Data Dog, Mixpanel, Telemetry, Mui, Chakra UI, Tailwind, Daisy UI'
+                technologies: 'Electron, React, Redux, Data Dog, Mixpanel, Telemetry, Mui, Chakra UI, Tailwind, Daisy UI, Node, Express, MongoDB, AWS, Amplify, IndexDB, CouchDB, PouchDB'
             },
             {
                 company: 'Moglix, Noida',
@@ -48,7 +48,7 @@ const Resume = () => {
                     "Enhanced user experience and reduced support queries by over 25% through the successful rollout of a SKU-based product search feature.",
                     "Delivered scalable, pixel-perfect web solutions under aggressive timelines through seamless cross-functional collaboration with design, QA, and product teams."
                 ],
-                technologies: 'React, Redux, Node, Express, MongoDB, AWS, Git, Angular, Html, css, Javascript, Typescript, Jira, Docker'
+                technologies: 'React, Redux, Node, Express, MongoDB, AWS, Git, Angular, Html, CSS/SCSS, Javascript, Typescript, Jira, Docker, Angular Material, SSR, Mixpanel'
             },
             {
                 company: 'Value First, Gurugram',
@@ -64,7 +64,7 @@ const Resume = () => {
                     "Accelerating initial bundle load by 60% through the implementation of comprehensive lazy loading for all modules.",
                     "Further enhancing speed by applying Brotli compression to shrink payloads and improve overall load times."
                 ],
-                technologies: 'Angular, Html, css, Javascript, Typescript, React, Redux, Node, Express, MongoDB, AWS, Git, Jira'
+                technologies: 'Typescript, Angular, JQuery, Html, CSS, Javascript, Node, Express, MongoDB, AWS, Git, Jira, Angular Material, Icomoon'
             },
             {
                 company: 'Moglix, Noida',
@@ -77,17 +77,17 @@ const Resume = () => {
                     "Built and managed critical e-commerce features and product workflows on the PrestaShop platform, directly supporting key business operations and marketing campaigns.",
                     "Collaborated seamlessly across design, QA, and content teams to deliver high-impact web solutions consistently under aggressive deadlines."
                 ],
-                technologies: 'Angular, Php, Javascript, JQuery, Prestashop, Wordpress, Gulp, Webpack, Html/Pug, Css/Scss, Bootstrap, Angular Material, Git, Jira'
+                technologies: 'Angular, Typescript,  Php, Javascript, JQuery, Prestashop, Wordpress, Gulp, Webpack, Html/Pug, Css/Scss, Bootstrap, Angular Material, Git, Jira'
             },
             {
                 company: 'Code Brew Labs',
                 title: 'Software Developer Intern',
                 period: 'Jan 2016 - Oct 2016',
                 achievements: [
-                    "Developed and optimized 'Plan My Medical Trip' and 'Clikat' websites, significantly enhancing the digital presence and service offerings for a leading travel agency.",
+                    "Developed and optimized 'Plan My Medical Trip', significantly enhancing the digital presence and service offerings for a leading travel agency.",
                     "Elevated proficiency across core front-end technologies, including Angular JS, JavaScript, jQuery, HTML, CSS, and Bootstrap."
                 ],
-                technologies: 'JQuery, Javascript, Filezila, AngularJS, HTML/Pug, Css / Scss, Bootstrap, Git, Jira'
+                technologies: 'AngularJS, JQuery, Javascript, AWS, Filezila, HTML, CSS, Bootstrap, Git, Jira'
             },
         ],
         education: [
@@ -390,13 +390,13 @@ const Resume = () => {
     }
 
     return (
-        <div className="flex flex-col md:flex-row gap-6 p-6 min-h-screen bg-base-200">
+        <div className="flex flex-col md:flex-row gap-6 p-6 min-h-screen bg-base-200" style={{ pageBreakInside: 'avoid' }}>
             {/* Form Section */}
-            <div className="flex-1 overflow-y-auto">
-                <div className="card bg-base-100 shadow-xl">
-                    <div className="card-body">
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="card-title">Resume Builder</h2>
+            <div className="flex-1 overflow-y-auto" style={{ pageBreakInside: 'avoid' }}>
+                <div className="card bg-base-100 shadow-xl" style={{ pageBreakInside: 'avoid' }}>
+                    <div className="card-body" style={{ pageBreakInside: 'avoid' }}>
+                        <div className="flex items-center justify-between mb-4" style={{ pageBreakInside: 'avoid' }}>
+                            <h2 className="card-title" style={{ pageBreakInside: 'avoid' }}>Resume Builder</h2>
                             <button
                                 className="btn  btn-circle text-primary text-2xl hover:bg-base-200"
                                 onClick={downloadPDF}
@@ -404,38 +404,38 @@ const Resume = () => {
                                 title="Download PDF"
                             >
                                 {isGeneratingPDF ? (
-                                    <i className="fas fa-spinner fa-spin"></i>
+                                    <i className="fas fa-spinner fa-spin" style={{ pageBreakInside: 'avoid' }}></i>
                                 ) : (
-                                    <i className="fas fa-download"></i>
+                                    <i className="fas fa-download" style={{ pageBreakInside: 'avoid' }}></i>
                                 )}
                             </button>
                         </div>
 
                         {/* ATS Score Section */}
-                        <div className="mb-6 p-4 bg-base-200 rounded-lg">
-                            <div className="flex items-center justify-between mb-2">
-                                <h3 className="text-lg font-semibold">ATS Score</h3>
-                                <div className="text-2xl font-bold text-primary">{atsScore}%</div>
+                        <div className="mb-6 p-4 bg-base-200 rounded-lg" style={{ pageBreakInside: 'avoid' }}>
+                            <div className="flex items-center justify-between mb-2" style={{ pageBreakInside: 'avoid' }}>
+                                <h3 className="text-lg font-semibold" style={{ pageBreakInside: 'avoid' }}>ATS Score</h3>
+                                <div className="text-2xl font-bold text-primary" style={{ pageBreakInside: 'avoid' }}>{atsScore}%</div>
                             </div>
-                            <div className="w-full bg-base-300 rounded-full h-2.5">
+                            <div className="w-full bg-base-300 rounded-full h-2.5" style={{ pageBreakInside: 'avoid' }}>
                                 <div
                                     className="bg-primary h-2.5 rounded-full transition-all duration-500"
                                     style={{ width: `${atsScore}%` }}
                                 ></div>
                             </div>
                             {atsFeedback.length > 0 && (
-                                <div className="mt-4">
-                                    <h4 className="font-semibold mb-2">Suggestions to improve:</h4>
-                                    <ul className="list-disc list-inside space-y-1">
+                                <div className="mt-4" style={{ pageBreakInside: 'avoid' }}>
+                                    <h4 className="font-semibold mb-2" style={{ pageBreakInside: 'avoid' }}>Suggestions to improve:</h4>
+                                    <ul className="list-disc list-inside space-y-1" style={{ pageBreakInside: 'avoid' }}>
                                         {atsFeedback.map((feedback, index) => (
-                                            <li key={index} className="text-sm">{feedback}</li>
+                                            <li key={index} className="text-sm" style={{ pageBreakInside: 'avoid' }}>{feedback}</li>
                                         ))}
                                     </ul>
                                 </div>
                             )}
                         </div>
 
-                        <div className="form-control gap-4">
+                        <div className="form-control gap-4" style={{ pageBreakInside: 'avoid' }}>
                             <input
                                 type="text"
                                 placeholder="Name"
@@ -477,7 +477,7 @@ const Resume = () => {
                                 className="input input-bordered"
                             />
 
-                            <div className="divider">Skills</div>
+                            <div className="divider" style={{ pageBreakInside: 'avoid' }}>Skills</div>
                             <textarea
                                 placeholder="Frontend Skills"
                                 name="skills.frontend"
@@ -528,12 +528,12 @@ const Resume = () => {
                                 className="textarea textarea-bordered h-24"
                             />
 
-                            <div className="divider">Work Experience</div>
+                            <div className="divider" style={{ pageBreakInside: 'avoid' }}>Work Experience</div>
 
                             {resumeData.experiences.map((exp, index) => (
-                                <div key={index} className="card bg-base-200 p-4">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h3 className="font-bold">Experience {index + 1}</h3>
+                                <div key={index} className="card bg-base-200 p-4" style={{ pageBreakInside: 'avoid' }}>
+                                    <div className="flex justify-between items-center mb-2" style={{ pageBreakInside: 'avoid' }}>
+                                        <h3 className="font-bold" style={{ pageBreakInside: 'avoid' }}>Experience {index + 1}</h3>
                                         <button
                                             className="btn btn-square btn-sm btn-error"
                                             onClick={() => removeExperience(index)}
@@ -585,12 +585,12 @@ const Resume = () => {
                                 Add Experience
                             </button>
 
-                            <div className="divider">Education</div>
+                            <div className="divider" style={{ pageBreakInside: 'avoid' }}>Education</div>
 
                             {resumeData.education.map((edu, eduIndex) => (
-                                <div key={eduIndex} className="card bg-base-200 p-4">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h3 className="font-bold">Education {eduIndex + 1}</h3>
+                                <div key={eduIndex} className="card bg-base-200 p-4" style={{ pageBreakInside: 'avoid' }}>
+                                    <div className="flex justify-between items-center mb-2" style={{ pageBreakInside: 'avoid' }}>
+                                        <h3 className="font-bold" style={{ pageBreakInside: 'avoid' }}>Education {eduIndex + 1}</h3>
                                         <button
                                             className="btn btn-square btn-sm btn-error"
                                             onClick={() => removeEducation(eduIndex)}
@@ -633,9 +633,9 @@ const Resume = () => {
                                         className="textarea textarea-bordered mb-4"
                                     />
 
-                                    <div className="mb-2">
-                                        <div className="flex justify-between items-center mb-2">
-                                            <h4 className="font-semibold">Projects</h4>
+                                    <div className="mb-2" style={{ pageBreakInside: 'avoid' }}>
+                                        <div className="flex justify-between items-center mb-2" style={{ pageBreakInside: 'avoid' }}>
+                                            <h4 className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Projects</h4>
                                             <button
                                                 className="btn btn-xs btn-primary"
                                                 onClick={() => addProject(eduIndex)}
@@ -645,9 +645,9 @@ const Resume = () => {
                                         </div>
 
                                         {edu.projects.map((project, projectIndex) => (
-                                            <div key={projectIndex} className="card bg-base-300 p-3 mb-2">
-                                                <div className="flex justify-between items-center mb-2">
-                                                    <h5 className="font-medium">Project {projectIndex + 1}</h5>
+                                            <div key={projectIndex} className="card bg-base-300 p-3 mb-2" style={{ pageBreakInside: 'avoid' }}>
+                                                <div className="flex justify-between items-center mb-2" style={{ pageBreakInside: 'avoid' }}>
+                                                    <h5 className="font-medium" style={{ pageBreakInside: 'avoid' }}>Project {projectIndex + 1}</h5>
                                                     <button
                                                         className="btn btn-xs btn-circle btn-error"
                                                         onClick={() => removeProject(eduIndex, projectIndex)}
@@ -694,40 +694,40 @@ const Resume = () => {
             </div>
 
             {/* Preview Section */}
-            <div className="flex-1">
-                <div className="card bg-base-100 shadow-xl">
+            <div className="flex-1" style={{ pageBreakInside: 'avoid' }}>
+                <div className="card bg-base-100 shadow-xl" style={{ pageBreakInside: 'avoid' }}>
                     <div className="card-body" ref={contentRef} style={{ fontFamily: 'Calibri, Arial, sans-serif' }}>
                         {/* Header */}
-                        <div className="text-center mb-8">
-                            <h1 className="text-4xl font-bold mb-4">{resumeData.name}</h1>
+                        <div className="text-center mb-4" style={{ pageBreakInside: 'avoid' }}>
+                            <h1 className="text-4xl font-bold mb-4" style={{ pageBreakInside: 'avoid' }}>{resumeData.name}</h1>
 
                             {/* Email & Phone */}
-                            <div className="flex justify-center items-center gap-6 text-sm">
+                            <div className="flex justify-center items-center gap-6 text-sm" style={{ pageBreakInside: 'avoid' }}>
                                 <a
                                     href={`mailto:${resumeData.email}`}
                                     className="link link-hover flex items-center gap-2 hover:text-primary transition-colors"
                                 >
-                                    <i className="fa-solid fa-envelope text-base"></i>
+                                    <i className="fa-solid fa-envelope text-base" style={{ pageBreakInside: 'avoid' }}></i>
                                     <span>{resumeData.email}</span>
                                 </a>
                                 <a
                                     href={`tel:${resumeData.phone}`}
                                     className="link link-hover flex items-center gap-2 hover:text-primary transition-colors"
                                 >
-                                    <i className="fa-solid fa-phone text-base"></i>
+                                    <i className="fa-solid fa-phone text-base" style={{ pageBreakInside: 'avoid' }}></i>
                                     <span>{resumeData.phone}</span>
                                 </a>
                             </div>
 
                             {/* GitHub & LinkedIn */}
-                            <div className="flex justify-center items-center gap-6 text-sm mt-3">
+                            <div className="flex justify-center items-center gap-6 text-sm mt-1" style={{ pageBreakInside: 'avoid' }}>
                                 <a
                                     href={`https://${resumeData.github}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="link link-hover flex items-center gap-2 hover:text-primary transition-colors"
                                 >
-                                    <i className="fa-brands fa-github text-xl"></i>
+                                    <i className="fa-brands fa-github text-xl" style={{ pageBreakInside: 'avoid' }}></i>
                                     <span>{resumeData.github}</span>
                                 </a>
                                 <a
@@ -736,7 +736,7 @@ const Resume = () => {
                                     rel="noopener noreferrer"
                                     className="link link-hover flex items-center gap-2 hover:text-primary transition-colors"
                                 >
-                                    <i className="fa-brands fa-linkedin text-xl"></i>
+                                    <i className="fa-brands fa-linkedin text-xl" style={{ pageBreakInside: 'avoid' }}></i>
                                     <span>{resumeData.linkedin}</span>
                                 </a>
                             </div>
@@ -744,53 +744,53 @@ const Resume = () => {
 
 
                         {/* Skills Section */}
-                        <div className="mb-6">
-                            <h2 className="text-xl font-bold mb-2 border-b pb-3">Skills</h2>
-                            <div className="ml-4 space-y-2">
+                        <div className="mb-6" style={{ pageBreakInside: 'avoid' }}>
+                            <h2 className="text-xl font-bold mb-2 border-b pb-3" style={{ pageBreakInside: 'avoid' }}>Skills</h2>
+                            <div className="ml-4 space-y-2" style={{ pageBreakInside: 'avoid' }}>
                                 <div>
-                                    <span className="font-semibold">Frontend:</span> {resumeData.skills.frontend}
+                                    <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Frontend:</span> {resumeData.skills.frontend}
                                 </div>
                                 <div>
-                                    <span className="font-semibold">Backend:</span> {resumeData.skills.backend}
+                                    <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Backend:</span> {resumeData.skills.backend}
                                 </div>
                                 <div>
-                                    <span className="font-semibold">Database:</span> {resumeData.skills.database}
+                                    <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Database:</span> {resumeData.skills.database}
                                 </div>
                                 <div>
-                                    <span className="font-semibold">Tools & DevOps:</span> {resumeData.skills.devops}
+                                    <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Tools & DevOps:</span> {resumeData.skills.devops}
                                 </div>
                                 <div>
-                                    <span className="font-semibold">Testing:</span> {resumeData.skills.testing}
+                                    <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Testing:</span> {resumeData.skills.testing}
                                 </div>
                                 <div>
-                                    <span className="font-semibold">Cloud & Hosting:</span> {resumeData.skills.cloud}
+                                    <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Cloud & Hosting:</span> {resumeData.skills.cloud}
                                 </div>
                                 <div>
-                                    <span className="font-semibold">Other:</span> {resumeData.skills.other}
+                                    <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Other:</span> {resumeData.skills.other}
                                 </div>
                             </div>
                         </div>
 
                         {/* Work Experience Section */}
-                        <div className="mb-6">
-                            <h2 className="text-xl font-bold mb-2 border-b pb-3">Work Experience</h2>
-                            <div className="space-y-6">
+                        <div className="mb-6" style={{ pageBreakInside: 'avoid' }}>
+                            <h2 className="text-xl font-bold mb-2 border-b pb-3" style={{ pageBreakInside: 'avoid' }}>Work Experience</h2>
+                            <div className="space-y-6" style={{ pageBreakInside: 'avoid' }}>
                                 {resumeData.experiences.map((exp, index) => (
-                                    <div key={index} className="ml-4">
-                                        <div className="flex justify-between items-center mb-2">
+                                    <div key={index} className="ml-4" style={{ pageBreakInside: 'avoid' }}>
+                                        <div className="flex justify-between items-center mb-2" style={{ pageBreakInside: 'avoid' }}>
                                             <div>
-                                                <h3 className="font-bold text-lg">{exp.company}</h3>
-                                                <div className="italic">{exp.title}</div>
+                                                <h3 className="font-bold text-lg" style={{ pageBreakInside: 'avoid' }}>{exp.company}</h3>
+                                                <div className="italic" style={{ pageBreakInside: 'avoid' }}>{exp.title}</div>
                                             </div>
-                                            <div className="text-sm text-gray-600">{exp.period}</div>
+                                            <div className="text-sm text-gray-600" style={{ pageBreakInside: 'avoid' }}>{exp.period}</div>
                                         </div>
-                                        <ul className="list-disc ml-6 mb-2 space-y-1">
+                                        <ul className="list-disc ml-6 mb-2 space-y-1" style={{ pageBreakInside: 'avoid' }}>
                                             {exp.achievements.map((achievement, i) => (
                                                 <li key={i}>{achievement}</li>
                                             ))}
                                         </ul>
-                                        <div className="text-sm">
-                                            <span className="font-semibold">Technologies:</span> {exp.technologies}
+                                        <div className="text-sm" style={{ pageBreakInside: 'avoid' }}>
+                                            <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Technologies:</span> {exp.technologies}
                                         </div>
                                     </div>
                                 ))}
@@ -798,34 +798,34 @@ const Resume = () => {
                         </div>
 
                         {/* Education Section */}
-                        <div className="mb-6">
-                            <h2 className="text-xl font-bold mb-2 border-b pb-3">Education</h2>
-                            <div className="space-y-6">
+                        <div className="mb-6" style={{ pageBreakInside: 'avoid' }}>
+                            <h2 className="text-xl font-bold mb-2 border-b pb-3" style={{ pageBreakInside: 'avoid' }}>Education</h2>
+                            <div className="space-y-6" style={{ pageBreakInside: 'avoid' }}>
                                 {resumeData.education.map((edu, eduIndex) => (
-                                    <div key={eduIndex} className="ml-4">
-                                        <div className="flex justify-between items-center">
+                                    <div key={eduIndex} className="ml-4" style={{ pageBreakInside: 'avoid' }}>
+                                        <div className="flex justify-between items-center" style={{ pageBreakInside: 'avoid' }}>
                                             <div>
-                                                <span className="font-bold">{edu.institution}</span><br />
-                                                <span className="text-blue-700 font-semibold">{edu.degree}</span>
-                                                {edu.percentage && <span className="ml-2">({edu.percentage})</span>}
+                                                <span className="font-bold" style={{ pageBreakInside: 'avoid' }}>{edu.institution}</span><br />
+                                                <span className="text-blue-700 font-semibold" style={{ pageBreakInside: 'avoid' }}>{edu.degree}</span>
+                                                {edu.percentage && <span className="ml-2" style={{ pageBreakInside: 'avoid' }}>({edu.percentage})</span>}
                                             </div>
-                                            <div className="italic">{edu.period}</div>
+                                            <div className="italic" style={{ pageBreakInside: 'avoid' }}>{edu.period}</div>
                                         </div>
                                         {edu.coursework && (
-                                            <div className="mt-2">
-                                                <span className="font-semibold">Relevant Coursework:</span> {edu.coursework}
+                                            <div className="mt-2" style={{ pageBreakInside: 'avoid' }}>
+                                                <span className="font-semibold" style={{ pageBreakInside: 'avoid' }}>Relevant Coursework:</span> {edu.coursework}
                                             </div>
                                         )}
                                         {edu.projects && edu.projects.length > 0 && (
-                                            <div className="mt-4">
-                                                <h3 className="font-bold text-lg mb-1">Project Work</h3>
-                                                <ul className="list-disc ml-6 space-y-2">
+                                            <div className="mt-4" style={{ pageBreakInside: 'avoid' }}>
+                                                <h3 className="font-bold text-lg mb-1" style={{ pageBreakInside: 'avoid' }}>Project Work</h3>
+                                                <ul className="list-disc ml-6 space-y-2" style={{ pageBreakInside: 'avoid' }}>
                                                     {edu.projects.map((project, projectIndex) => (
                                                         <li key={projectIndex}>
-                                                            <span className="font-bold">{project.title}:</span> {project.description}
+                                                            <span className="font-bold" style={{ pageBreakInside: 'avoid' }}>{project.title}:</span> {project.description}
                                                             {project.technologies && (
-                                                                <span className="block mt-1">
-                                                                    <span className="italic">Technologies:</span> {project.technologies}
+                                                                <span className="block mt-1" style={{ pageBreakInside: 'avoid' }}>
+                                                                    <span className="italic" style={{ pageBreakInside: 'avoid' }}>Technologies:</span> {project.technologies}
                                                                 </span>
                                                             )}
                                                         </li>

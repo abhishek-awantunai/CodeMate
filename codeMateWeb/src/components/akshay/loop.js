@@ -1,0 +1,1 @@
+console.clear('Amisha JI Ka class');
