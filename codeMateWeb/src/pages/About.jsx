@@ -1,83 +1,72 @@
-import React from 'react';
-import { FaHeart, FaCode, FaUserFriends, FaLightbulb } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import Header from '../components/Header';
 
 const About = () => {
-    return (
-        <div className="min-h-screen bg-gradient-to-b from-rose-100 to-white">
-            {/* Hero Section */}
-            <div className="container mx-auto px-4 py-16">
-                <div className="text-center mb-16">
-                    <h1 className="text-5xl font-bold text-gray-800 mb-4">
-                        Welcome to CodeMate
-                    </h1>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Where passionate developers connect, collaborate, and create amazing projects together.
-                    </p>
-                </div>
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header />
 
-                {/* Features Section */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-                    <FeatureCard
-                        icon={<FaCode className="w-8 h-8 text-rose-500" />}
-                        title="Smart Matching"
-                        description="Find developers who complement your skills and share your interests"
-                    />
-                    <FeatureCard
-                        icon={<FaUserFriends className="w-8 h-8 text-rose-500" />}
-                        title="Collaboration"
-                        description="Connect instantly with developers around the world"
-                    />
-                    <FeatureCard
-                        icon={<FaLightbulb className="w-8 h-8 text-rose-500" />}
-                        title="Project Ideas"
-                        description="Share and discover exciting project opportunities"
-                    />
-                    <FeatureCard
-                        icon={<FaHeart className="w-8 h-8 text-rose-500" />}
-                        title="Community"
-                        description="Join a thriving community of passionate developers"
-                    />
-                </div>
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">About CodeMate</h1>
+          
+          <div className="prose prose-lg max-w-none">
+            <p className="text-gray-600 mb-6">
+              CodeMate is a platform designed to connect developers and tech professionals, making it easier to find collaboration opportunities, share knowledge, and build meaningful professional relationships.
+            </p>
 
-                {/* Mission Section */}
-                <div className="bg-white rounded-2xl shadow-xl p-8 mb-16">
-                    <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-                        Our Mission
-                    </h2>
-                    <p className="text-gray-600 text-lg text-center max-w-3xl mx-auto">
-                        CodeMate is revolutionizing how developers connect and collaborate. 
-                        We believe great things happen when passionate developers come together. 
-                        Our platform makes it easy to find the perfect coding partner for your next project.
-                    </p>
-                </div>
+            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Our Mission</h2>
+            <p className="text-gray-600 mb-6">
+              We believe in the power of collaboration and community in the tech industry. Our mission is to create a space where developers can connect, learn from each other, and build amazing things together.
+            </p>
 
-                {/* CTA Section */}
-                <div className="text-center">
-                    <button className="bg-gradient-to-r from-rose-500 to-pink-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-                        Start Matching Now
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const FeatureCard = ({ icon, title, description }) => {
-    return (
-        <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-            <div className="flex flex-col items-center text-center">
-                <div className="mb-4">
-                    {icon}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                    {title}
-                </h3>
+            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">What We Offer</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Developer Matching</h3>
                 <p className="text-gray-600">
-                    {description}
+                  Find developers with complementary skills and interests for your next project.
                 </p>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Skill Sharing</h3>
+                <p className="text-gray-600">
+                  Learn from other developers and share your expertise with the community.
+                </p>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Project Collaboration</h3>
+                <p className="text-gray-600">
+                  Connect with developers to work on exciting projects together.
+                </p>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Community Events</h3>
+                <p className="text-gray-600">
+                  Participate in virtual meetups, hackathons, and coding challenges.
+                </p>
+              </div>
             </div>
+
+            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Our Team</h2>
+            <p className="text-gray-600 mb-6">
+              We're a team of passionate developers and tech enthusiasts who understand the importance of community in the tech industry. Our diverse backgrounds and experiences help us create a platform that serves the needs of developers worldwide.
+            </p>
+
+            <div className="mt-8">
+              <Link
+                to="/feed"
+                className="btn btn-primary bg-gradient-to-r from-pink-500 to-orange-500 border-none hover:from-pink-600 hover:to-orange-600"
+              >
+                Get Started
+              </Link>
+            </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
-export default About;
+export default About; 

@@ -4,10 +4,43 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
     <title>Vite + React</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+    console.clear();
+
+    // var fruit = 'apple';
+    // let name = 'Abhishek'
+
+    // function demo(params) {
+    //     var a = 234;
+    //     let assd = 22;
+    // }
+
+    // demo();
+
+    // local this is created for each function whenever its execution context is created
+    function Counter() {
+        let count = 0;
+        this.getCount = function() {
+            return count;
+        };
+        this.up = function() {
+            return ++count;
+        };
+        this.down = function() {
+            return --count;
+        };
+    }
+
+    // console.log(Counter())
+    </script>
   </body>
 </html>

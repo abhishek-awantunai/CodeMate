@@ -1,0 +1,5 @@
+/*
+
+A template is a HTML view where you can display data by binding controls to properties of an Angular component.
+
+*/

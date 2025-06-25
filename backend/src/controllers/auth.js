@@ -62,6 +62,7 @@ const loginController = async (req, res) => {
             sameSite: 'Strict',
         });
         res.json({
+            status: true,
             message: 'Login successful',
             data: user,
         });
