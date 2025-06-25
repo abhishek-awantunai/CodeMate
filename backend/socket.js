@@ -4,21 +4,21 @@ const Chat = require('./src/models/Chat');
 
 const getSecretRoomId = (userId, targetUserId) => {
     const id = [userId, targetUserId].sort().join('_');
-    return  crypto.createHash('sha256').update(id).digest('hex');
-}
+    return crypto.createHash('sha256').update(id).digest('hex');
+};
 
 const initializeSocket = (server) => {
     const io = new Server(server, {
         cors: {
             origin: 'http://localhost:8000',
             credentials: true,
-        }
+        },
     });
 
     io.on('connection', (socket) => {
         socket.on('joinRoom', ({ userId, targetUserId }) => {
             const roomId = getSecretRoomId(userId, targetUserId);
-            console.log(`Users joined room ${roomId}`)
+            console.log(`Users joined room ${roomId}`);
             socket.join(roomId);
         });
 
@@ -28,20 +28,20 @@ const initializeSocket = (server) => {
             try {
                 let chat = await Chat.findOne({
                     participants: {
-                        $all: [userId, targetUserId]
-                    }
-                })
+                        $all: [userId, targetUserId],
+                    },
+                });
 
                 if (!chat) {
                     chat = new Chat({
                         participants: [userId, targetUserId],
-                        messages: []
-                    })
+                        messages: [],
+                    });
                 }
 
                 chat.messages.push({
                     senderId: userId,
-                    text
+                    text,
                 });
 
                 await chat.save();
@@ -54,7 +54,7 @@ const initializeSocket = (server) => {
                 senderId: userId,
                 targetUserId,
                 text,
-                createdAt: new Date(Date.now() - 3600000).toISOString()
+                createdAt: new Date(Date.now() - 3600000).toISOString(),
             });
         });
 
