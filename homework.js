@@ -46,7 +46,3 @@
         - What is the difference between npm install and npm install --save-dev? - ✅
             - npm install installs packages and adds them to the dependencies section of package.json, while npm install --save-dev explicitly adds the package to devDependencies, which is used for development purposes only. - ✅
 */
-
-/*
-
-*/
