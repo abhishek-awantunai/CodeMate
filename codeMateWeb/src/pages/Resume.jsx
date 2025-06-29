@@ -1,5 +1,123 @@
 import React, { useRef, useState, useEffect } from 'react';
-import html2pdf from 'html2pdf.js';
+// import jsPDF from 'jspdf';
+import { Page, Text, View, Document, StyleSheet, Font, PDFDownloadLink } from '@react-pdf/renderer';
+
+// Optional: Register a font for better compatibility
+Font.register({
+    family: 'Calibri',
+    fonts: [
+        {
+            src: 'https://raw.githubusercontent.com/coderiver/masstar/refs/heads/master/site/fonts/Calibri-Bold.woff',
+            fontWeight: 'normal',
+        },
+        {
+            src: 'https://raw.githubusercontent.com/coderiver/masstar/refs/heads/master/site/fonts/Calibri-Bold.woff',
+            fontWeight: 'bold',
+        },
+    ],
+});
+
+const styles = StyleSheet.create({
+    page: {
+        fontFamily: 'Calibri',
+        fontSize: 11,
+        padding: 32,
+        backgroundColor: '#fff',
+        color: '#222',
+        lineHeight: 1.5,
+    },
+    header: { textAlign: 'center', marginBottom: 8 },
+    name: { fontSize: 22, fontWeight: 'bold', marginBottom: 4 },
+    contact: { fontSize: 10, marginBottom: 2 },
+    section: { marginTop: 12, marginBottom: 6 },
+    sectionTitle: { fontSize: 14, fontWeight: 'bold', borderBottom: 1, marginBottom: 4 },
+    label: { fontWeight: 'bold' },
+    list: { marginLeft: 12, marginBottom: 2 },
+    item: { marginBottom: 2 },
+    small: { fontSize: 9, color: '#555' },
+});
+
+const ResumePDF = ({ resumeData }) => (
+    <Document>
+        <Page size="A4" style={styles.page}>
+            {/* Header */}
+            <View style={styles.header}>
+                <Text style={styles.name}>{resumeData.name}</Text>
+                <Text style={styles.contact}>
+                    {resumeData.email} | {resumeData.phone}
+                </Text>
+                <Text style={styles.contact}>
+                    {resumeData.github} | {resumeData.linkedin}
+                </Text>
+            </View>
+
+            {/* Skills */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Skills</Text>
+                {Object.entries(resumeData.skills).map(([key, value]) => (
+                    <Text key={key}>
+                        <Text style={styles.label}>
+                            {key.charAt(0).toUpperCase() + key.slice(1)}:
+                        </Text>{' '}
+                        {value}
+                    </Text>
+                ))}
+            </View>
+
+            {/* Experience */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Work Experience</Text>
+                {resumeData.experiences.map((exp, idx) => (
+                    <View key={idx} style={{ marginBottom: 6 }}>
+                        <Text style={styles.label}>{exp.company}</Text>
+                        <Text style={styles.small}>
+                            {exp.title} | {exp.period}
+                        </Text>
+                        <View style={styles.list}>
+                            {exp.achievements.map((ach, i) => (
+                                <Text key={i} style={styles.item}>
+                                    • {ach}
+                                </Text>
+                            ))}
+                        </View>
+                        <Text style={styles.small}>
+                            <Text style={styles.label}>Technologies:</Text> {exp.technologies}
+                        </Text>
+                    </View>
+                ))}
+            </View>
+
+            {/* Education */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Education</Text>
+                {resumeData.education.map((edu, idx) => (
+                    <View key={idx} style={{ marginBottom: 6 }}>
+                        <Text style={styles.label}>{edu.institution}</Text>
+                        <Text style={styles.small}>
+                            {edu.degree} | {edu.period} {edu.percentage && `| ${edu.percentage}`}
+                        </Text>
+                        {edu.coursework && (
+                            <Text style={styles.small}>
+                                <Text style={styles.label}>Coursework:</Text> {edu.coursework}
+                            </Text>
+                        )}
+                        {edu.projects && edu.projects.length > 0 && (
+                            <View style={styles.list}>
+                                {edu.projects.map((proj, i) => (
+                                    <Text key={i} style={styles.item}>
+                                        <Text style={styles.label}>{proj.title}:</Text>{' '}
+                                        {proj.description}{' '}
+                                        {proj.technologies && `(Tech: ${proj.technologies})`}
+                                    </Text>
+                                ))}
+                            </View>
+                        )}
+                    </View>
+                ))}
+            </View>
+        </Page>
+    </Document>
+);
 
 const Resume = () => {
     const contentRef = useRef(null);
@@ -394,68 +512,42 @@ const Resume = () => {
         });
     };
 
-    const downloadPDF = async () => {
-        if (isGeneratingPDF) return;
+    // const downloadPDF = async () => {
+    //     if (isGeneratingPDF) return;
 
-        try {
-            setIsGeneratingPDF(true);
-            const content = contentRef.current;
+    //     try {
+    //         setIsGeneratingPDF(true);
+    //         const content = contentRef.current;
 
-            if (!content) {
-                throw new Error('Content element not found');
-            }
+    //         if (!content) {
+    //             throw new Error('Content element not found');
+    //         }
 
-            // Create a clone of the content to modify styles
-            const clonedContent = content.cloneNode(true);
+    //         const doc = new jsPDF({
+    //             unit: 'pt',
+    //             format: 'a4',
+    //             orientation: 'portrait',
+    //         });
 
-            // Convert oklch colors to rgb
-            const styleSheets = document.styleSheets;
-            let cssText = '';
-            for (let i = 0; i < styleSheets.length; i++) {
-                try {
-                    const rules = styleSheets[i].cssRules;
-                    for (let j = 0; j < rules.length; j++) {
-                        cssText += rules[j].cssText + '\n';
-                    }
-                } catch (e) {
-                    console.warn('Could not read stylesheet rules:', e);
-                }
-            }
-
-            // Create a temporary container
-            const tempContainer = document.createElement('div');
-            tempContainer.appendChild(clonedContent);
-
-            // Add a style tag with converted colors
-            const styleTag = document.createElement('style');
-            styleTag.textContent = cssText.replace(/oklch\([^)]+\)/g, '#000000');
-            tempContainer.appendChild(styleTag);
-
-            const options = {
-                margin: [0.5, 0.5],
-                filename: `${resumeData.name.replace(/\s+/g, '_')}_Resume.pdf`,
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    logging: true,
-                    backgroundColor: '#ffffff',
-                },
-                jsPDF: {
-                    unit: 'in',
-                    format: 'a4',
-                    orientation: 'portrait',
-                },
-            };
-
-            await html2pdf().set(options).from(tempContainer).save();
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('Failed to generate PDF. Please try again.');
-        } finally {
-            setIsGeneratingPDF(false);
-        }
-    };
+    //         await doc.html(content, {
+    //             x: 20,
+    //             y: 20,
+    //             html2canvas: {
+    //                 scale: 1,
+    //                 useCORS: true,
+    //                 backgroundColor: '#fff',
+    //             },
+    //             callback: function (doc) {
+    //                 doc.save(`${resumeData.name.replace(/\s+/g, '_')}_Resume.pdf`);
+    //                 setIsGeneratingPDF(false);
+    //             },
+    //         });
+    //     } catch (error) {
+    //         console.error('Error generating PDF:', error);
+    //         alert('Failed to generate PDF. Please try again.');
+    //         setIsGeneratingPDF(false);
+    //     }
+    // };
 
     return (
         <div
@@ -473,24 +565,19 @@ const Resume = () => {
                             <h2 className="card-title" style={{ pageBreakInside: 'avoid' }}>
                                 Resume Builder
                             </h2>
-                            <button
-                                className="btn  btn-circle text-primary text-2xl hover:bg-base-200"
-                                onClick={downloadPDF}
-                                disabled={isGeneratingPDF}
-                                title="Download PDF"
+                            <PDFDownloadLink
+                                document={<ResumePDF resumeData={resumeData} />}
+                                fileName={`${resumeData.name.replace(/\s+/g, '_')}_Resume.pdf`}
+                                className="btn btn-circle text-primary text-2xl hover:bg-base-200"
                             >
-                                {isGeneratingPDF ? (
-                                    <i
-                                        className="fas fa-spinner fa-spin"
-                                        style={{ pageBreakInside: 'avoid' }}
-                                    ></i>
-                                ) : (
-                                    <i
-                                        className="fas fa-download"
-                                        style={{ pageBreakInside: 'avoid' }}
-                                    ></i>
-                                )}
-                            </button>
+                                {({ loading }) =>
+                                    loading ? (
+                                        <i className="fas fa-spinner fa-spin"></i>
+                                    ) : (
+                                        <i className="fas fa-download"></i>
+                                    )
+                                }
+                            </PDFDownloadLink>
                         </div>
 
                         {/* ATS Score Section */}
